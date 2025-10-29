@@ -1,0 +1,17 @@
+{
+  "name": "blind-maze-navigation",
+  "version": "1.0.0",
+  "description": "A web-based, turn-based multiplayer game for 3 players navigating a blind 5x5 grid to reach the Crown.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "http-server -p 8000"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "http-server": "^14.1.0",
+    "socket.io": "^4.5.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

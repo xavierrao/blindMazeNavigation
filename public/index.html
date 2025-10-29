@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blind Crown Quest</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Load modules in dependency order -->
+    <script src="js/state.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/modals.js"></script>
+    <script src="js/wheel.js"></script>
+    <script src="js/wheelHandlers.js"></script>
+    <script src="js/items.js"></script>
+    <script src="js/room.js"></script>
+    <script src="js/gameplay.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</head>
+
+<body>
+    <!-- Name entry page -->
+    <div id="name-entry">
+        <h1>Blind Crown Quest</h1>
+        <h3>Enter Your Name</h3>
+        <input type="text" id="player-name" placeholder="Your name (max 20 characters)" maxlength="20">
+        <button id="continue-name" class="fantasy-button" disabled>Continue</button>
+    </div>
+    <!-- Room selection and creation page -->
+    <div id="room-container">
+        <div id="room-selection" style="display: none;">
+            <h1>Blind Crown Quest</h1>
+            <button id="create-room" class="fantasy-button">Forge a New Quest</button>
+            <div class="memory-toggle-container">
+                <label for="memory-toggle-create">Memory Mode (Logs clear each round):</label>
+                <input type="checkbox" id="memory-toggle-create">
+            </div>
+            <div class="memory-toggle-container">
+                <label for="random-start-toggle-create">Random Start Space:</label>
+                <input type="checkbox" id="random-start-toggle-create">
+            </div>
+            <input type="text" id="room-id" placeholder="Enter Quest Scroll ID">
+            <button id="join-room" class="fantasy-button">Join the Quest</button>
+            <button id="back-to-name" class="fantasy-button">Back to Name</button>
+        </div>
+        <div id="room-id-display" style="display: none;"></div>
+    </div>
+    <!-- Loading indicator -->
+    <div id="loading-indicator" style="display: none;">Crafting Quest...</div>
+    <!-- Game interface -->
+    <div id="game" style="display: none;">
+        <!-- Displays all player info -->
+        <div id="player-info-bar"></div>
+        <!-- End Turn button (visible only to current player) -->
+        <div id="end-turn" class="end-turn-container"></div>
+        <!-- Move Options header -->
+        <div id="move-options-header">Move Options</div>
+        <!-- Movement options (e.g., Move North, Spin Shadow Wheel) -->
+        <div id="move-options"></div>
+        <!-- Shop header -->
+        <div id="shop-header">Shop</div>
+        <!-- Shop items for purchasing -->
+        <div id="shop-items"></div>
+        <!-- Inventory header -->
+        <div id="inventory-header">Inventory</div>
+        <!-- Player's inventory for item usage -->
+        <div id="inventory"></div>
+        <!-- Game log -->
+        <div id="log">
+            <!-- Shop header -->
+            <div id="log-header">Game Log</div>
+            <div id="log-content"></div>
+        </div>
+        <!-- Back to room selection button -->
+        <div id="back-to-room-selection-container">
+            <button id="back-to-room-selection" class="fantasy-button">Back to Quest Selection</button>
+        </div>
+        <!-- Game board visualization (shown at game over) -->
+        <svg id="board" width="400" height="400" style="display: none;"></svg>
+        <!-- Modal for selling items -->
+        <div id="sell-modal" style="display: none;">
+            <div id="sell-items"></div>
+        </div>
+        <!-- Wheel Modal -->
+        <div id="wheel-modal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1000;">
+            <div id="wheel-container"
+                style="display: none; flex-direction: column; align-items: center; background-color: #3c2f2f; padding: 30px; border-radius: 10px; border: 2px solid #d4a017;">
+                <h2 style="color: #d4a017; margin-top: 0;">Spin the Wheel!</h2>
+                <div style="position: relative;">
+                    <svg id="wheel-svg" width="400" height="400" viewBox="0 0 400 400"></svg>
+                    <div id="wheel-pointer"
+                        style="position: absolute; top: 25px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 15px solid #d4a017; z-index: 10;">
+                    </div>
+                </div>
+                <button id="spin-button" class="fantasy-button">Click to Spin</button>
+                <div id="wheel-result"
+                    style="display: none; margin-top: 20px; padding: 15px; background-color: #4a3728; border: 2px solid #d4a017; border-radius: 5px; font-size: 18px; text-align: center;">
+                </div>
+            </div>
+        </div>
+        <!-- Player Selection Modal -->
+        <div id="player-selection-modal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1001;">
+            <div
+                style="display: flex; flex-direction: column; align-items: center; background-color: #3c2f2f; padding: 30px; border-radius: 10px; border: 2px solid #d4a017; max-width: 500px;">
+                <h2 id="player-selection-title" style="color: #d4a017; margin-top: 0;">Select a Player</h2>
+                <div id="player-selection-container"
+                    style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                </div>
+            </div>
+        </div>
+        <!-- Item Selection Modal -->
+        <div id="item-selection-modal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1001;">
+            <div
+                style="display: flex; flex-direction: column; align-items: center; background-color: #3c2f2f; padding: 30px; border-radius: 10px; border: 2px solid #d4a017; max-width: 500px;">
+                <h2 id="item-selection-title" style="color: #d4a017; margin-top: 0;">Select an Item</h2>
+                <div id="item-selection-container"
+                    style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
