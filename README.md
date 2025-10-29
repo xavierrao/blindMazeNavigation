@@ -209,7 +209,8 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 ### Known Issues & Worries
 
 #### Critical
-- **Grid Generation**: Crown connections may violate the one-connection-per-direction rule (e.g., Crown attached to node 23 when it already has a northwest connection)
+- ~~**Grid Generation**: Crown connections may violate the one-connection-per-direction rule (e.g., Crown attached to node 23 when it already has a northwest connection)~~ ✅ **FIXED** - Crown now properly validates directional uniqueness before connecting
+- ~~**Map Visualization**: Non-adjacent connections difficult to distinguish when many exist (e.g., space 0→24 and space 6→18 connection lines overlapping)~~ ✅ **FIXED** - Implemented curved Bezier lines with color coding and labels for non-adjacent connections
 
 #### Bugs to Fix
 - **Shadow Realm Movement**: "Send someone to Shadow Realm" and "Go to Shadow Realm" wheel results need verification
@@ -219,10 +220,11 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 ### Planned Features
 
 #### High Priority (Necessary Implementations)
+- ~~[ ] **Fix Grid Generation**: Prevent invalid Crown connections that violate directional rules~~ ✅ **COMPLETED**
+- ~~[ ] **Improve Map Readability**: Make non-adjacent connections easier to distinguish~~ ✅ **COMPLETED**
 - [ ] **Fix Shadow Realm Movement**: Ensure all Shadow Realm teleportation effects work correctly
 - [ ] **Verify Selling System**: Test and confirm item selling when players lack gold
 - [ ] **Combat Wheel Review**: Audit and fix combat wheel implementation
-- [ ] **Grid Generation Fix**: Prevent invalid Crown connections that violate directional rules
 
 #### Medium Priority (Optional Enhancements)
 - [ ] **One-Way Connections**: Add 5% chance for one-way connections to increase map complexity

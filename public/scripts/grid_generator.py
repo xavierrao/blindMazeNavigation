@@ -17,6 +17,9 @@ def create_grid(start_space_id=12):
     for i, t in enumerate(types):
         spaces[available_ids[i]]["type"] = t
     
+    # Get crown ID early
+    crown_id = next(i for i, s in enumerate(spaces) if s["type"] == "Crown")
+    
     # Define outside spaces (0-4, 5, 9, 10, 14, 15, 19, 20-24)
     outside = {0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24}
     
@@ -79,6 +82,15 @@ def create_grid(start_space_id=12):
                 adjacent.append(r_new * 5 + c_new)
         return adjacent
     
+    # Check if a space already has a connection in a given direction
+    def has_connection_in_direction(space_id, target_direction):
+        """Check if space already has a connection in the given ordinal direction"""
+        for conn in spaces[space_id]["connections"]:
+            conn_dir = get_direction(space_id, conn)
+            if conn_dir == target_direction:
+                return True
+        return False
+    
     # BFS to check connectivity and Crown distance
     def is_valid_grid(spaces, crown_id, start_id):
         visited = set()
@@ -109,18 +121,19 @@ def create_grid(start_space_id=12):
                     queue.append((next_space, path + [next_space]))
         return []
     
-    # Phase 1: Connect outside spaces to all cardinal adjacent outside spaces
+    # Phase 1: Connect outside spaces to all cardinal adjacent outside spaces (SKIP CROWN)
     for space_id in outside:
         if spaces[space_id]["type"] == "Crown":
             continue
         adj_outside = get_adjacent_cardinal(space_id)
         for adj in adj_outside:
-            if adj in outside and adj not in spaces[space_id]["connections"]:
+            if adj in outside and adj not in spaces[space_id]["connections"] and spaces[adj]["type"] != "Crown":
                 spaces[space_id]["connections"].append(adj)
                 if space_id not in spaces[adj]["connections"]:
                     spaces[adj]["connections"].append(space_id)
     
     # Phase 2: Non-adjacent connections (5% chance, unique directions, stop after connecting in a quadrant)
+    # SKIP CROWN ENTIRELY
     ordinal_directions = ["NorthWest", "NorthEast", "SouthWest", "SouthEast"]
     for space_id in range(25):
         if spaces[space_id]["type"] == "Crown":
@@ -128,6 +141,9 @@ def create_grid(start_space_id=12):
         r, c = get_coords(space_id)
         non_adjacent = [i for i in range(25) if i != space_id and get_coords(i)[0] != r and get_coords(i)[1] != c]
         non_adjacent = [i for i in non_adjacent if abs(get_coords(i)[0] - r) > 1 or abs(get_coords(i)[1] - c) > 1]
+        # Filter out crown
+        non_adjacent = [i for i in non_adjacent if spaces[i]["type"] != "Crown"]
+        
         direction_groups = {d: [] for d in ordinal_directions}
         for target in non_adjacent:
             direction = get_direction(space_id, target)
@@ -139,15 +155,14 @@ def create_grid(start_space_id=12):
                 if len(spaces[space_id]["connections"]) >= 4 or len(spaces[target]["connections"]) >= 4:
                     continue
                 inverse_direction = get_direction(target, space_id)
-                if inverse_direction:
-                    target_non_adjacent = [c for c in spaces[target]["connections"] if abs(get_coords(c)[0] - get_coords(target)[0]) > 1 or abs(get_coords(c)[1] - get_coords(target)[1]) > 1]
-                    if inverse_direction not in [get_direction(target, c) for c in target_non_adjacent]:
-                        if random.random() < 0.05:
-                            spaces[space_id]["connections"].append(target)
-                            spaces[target]["connections"].append(space_id)
-                            break  # Move to next quadrant
+                if inverse_direction and not has_connection_in_direction(target, inverse_direction):
+                    if random.random() < 0.05:
+                        spaces[space_id]["connections"].append(target)
+                        spaces[target]["connections"].append(space_id)
+                        break  # Move to next quadrant
     
     # Phase 3: Cardinal adjacent connections for all spaces (50% chance)
+    # SKIP CROWN ENTIRELY
     for space_id in range(25):
         if spaces[space_id]["type"] == "Crown":
             continue
@@ -174,17 +189,46 @@ def create_grid(start_space_id=12):
             if source in spaces[target]["connections"]:
                 spaces[target]["connections"].remove(source)
     
-    # Phase 5: Crown connections - keep one bidirectional connection
-    crown_id = next(i for i, s in enumerate(spaces) if s["type"] == "Crown")
-    incoming = [i for i in range(25) if crown_id in spaces[i]["connections"]]
-    if incoming:
-        keep = random.choice(incoming)
-        for space_id in range(25):
-            if space_id != keep and crown_id in spaces[space_id]["connections"]:
-                spaces[space_id]["connections"].remove(crown_id)
-        spaces[crown_id]["connections"] = [keep]
-        if crown_id not in spaces[keep]["connections"]:
-            spaces[keep]["connections"].append(crown_id)
+    # Phase 5: Crown connections - FIXED VERSION
+    # The crown should have exactly ONE bidirectional connection
+    # We need to be careful about which space we connect it to
+    
+    # Find potential connectors (spaces that can connect to crown without violating direction rules)
+    potential_connectors = []
+    for space_id in range(25):
+        if space_id == crown_id or spaces[space_id]["type"] == "Crown":
+            continue
+        
+        # Check if this space already has a connection in the direction of the crown
+        direction_to_crown = get_direction(space_id, crown_id)
+        if direction_to_crown and not has_connection_in_direction(space_id, direction_to_crown):
+            # Check if connecting wouldn't exceed connection limit
+            if len(spaces[space_id]["connections"]) < 4:
+                potential_connectors.append(space_id)
+    
+    if not potential_connectors:
+        # Fallback: force a connection by removing an existing one if needed
+        all_spaces = [i for i in range(25) if i != crown_id]
+        random.shuffle(all_spaces)
+        for space_id in all_spaces:
+            direction_to_crown = get_direction(space_id, crown_id)
+            if direction_to_crown:
+                # Remove any existing connection in this direction
+                for conn in list(spaces[space_id]["connections"]):
+                    if get_direction(space_id, conn) == direction_to_crown:
+                        spaces[space_id]["connections"].remove(conn)
+                        if space_id in spaces[conn]["connections"]:
+                            spaces[conn]["connections"].remove(space_id)
+                
+                # Now connect to crown
+                spaces[space_id]["connections"].append(crown_id)
+                spaces[crown_id]["connections"] = [space_id]
+                break
+    else:
+        # Choose a random valid connector
+        connector = random.choice(potential_connectors)
+        spaces[connector]["connections"].append(crown_id)
+        spaces[crown_id]["connections"] = [connector]
     
     # Ensure all spaces are connected and valid
     attempts = 0
@@ -193,23 +237,28 @@ def create_grid(start_space_id=12):
         # Clear connections and retry
         for s in spaces:
             s["connections"] = []
-        # Phase 1: Outside cardinal connections
+        
+        # Re-run all phases
+        # Phase 1: Outside cardinal connections (skip crown)
         for space_id in outside:
             if spaces[space_id]["type"] == "Crown":
                 continue
             adj_outside = get_adjacent_cardinal(space_id)
             for adj in adj_outside:
-                if adj in outside and adj not in spaces[space_id]["connections"]:
+                if adj in outside and adj not in spaces[space_id]["connections"] and spaces[adj]["type"] != "Crown":
                     spaces[space_id]["connections"].append(adj)
                     if space_id not in spaces[adj]["connections"]:
                         spaces[adj]["connections"].append(space_id)
-        # Phase 2: Non-adjacent connections
+        
+        # Phase 2: Non-adjacent connections (skip crown)
         for space_id in range(25):
             if spaces[space_id]["type"] == "Crown":
                 continue
             r, c = get_coords(space_id)
             non_adjacent = [i for i in range(25) if i != space_id and get_coords(i)[0] != r and get_coords(i)[1] != c]
             non_adjacent = [i for i in non_adjacent if abs(get_coords(i)[0] - r) > 1 or abs(get_coords(i)[1] - c) > 1]
+            non_adjacent = [i for i in non_adjacent if spaces[i]["type"] != "Crown"]
+            
             direction_groups = {d: [] for d in ordinal_directions}
             for target in non_adjacent:
                 direction = get_direction(space_id, target)
@@ -221,14 +270,13 @@ def create_grid(start_space_id=12):
                     if len(spaces[space_id]["connections"]) >= 4 or len(spaces[target]["connections"]) >= 4:
                         continue
                     inverse_direction = get_direction(target, space_id)
-                    if inverse_direction:
-                        target_non_adjacent = [c for c in spaces[target]["connections"] if abs(get_coords(c)[0] - get_coords(target)[0]) > 1 or abs(get_coords(c)[1] - get_coords(target)[1]) > 1]
-                        if inverse_direction not in [get_direction(target, c) for c in target_non_adjacent]:
-                            if random.random() < 0.05:
-                                spaces[space_id]["connections"].append(target)
-                                spaces[target]["connections"].append(space_id)
-                                break  # Move to next quadrant
-        # Phase 3: Cardinal adjacent connections
+                    if inverse_direction and not has_connection_in_direction(target, inverse_direction):
+                        if random.random() < 0.05:
+                            spaces[space_id]["connections"].append(target)
+                            spaces[target]["connections"].append(space_id)
+                            break
+        
+        # Phase 3: Cardinal adjacent connections (skip crown)
         for space_id in range(25):
             if spaces[space_id]["type"] == "Crown":
                 continue
@@ -243,6 +291,7 @@ def create_grid(start_space_id=12):
                     spaces[space_id]["connections"].append(adj)
                     if space_id not in spaces[adj]["connections"] and len(spaces[adj]["connections"]) < 4:
                         spaces[adj]["connections"].append(space_id)
+        
         # Phase 4: Remove diagonal connections for non-outside
         non_outside = [i for i in range(25) if i not in outside and spaces[i]["type"] != "Crown"]
         for space_id in non_outside:
@@ -253,16 +302,36 @@ def create_grid(start_space_id=12):
                     spaces[source]["connections"].remove(target)
                 if source in spaces[target]["connections"]:
                     spaces[target]["connections"].remove(source)
-        # Phase 5: Crown connections
-        incoming = [i for i in range(25) if crown_id in spaces[i]["connections"]]
-        if incoming:
-            keep = random.choice(incoming)
-            for space_id in range(25):
-                if space_id != keep and crown_id in spaces[space_id]["connections"]:
-                    spaces[space_id]["connections"].remove(crown_id)
-            spaces[crown_id]["connections"] = [keep]
-            if crown_id not in spaces[keep]["connections"]:
-                spaces[keep]["connections"].append(crown_id)
+        
+        # Phase 5: Crown connections (fixed)
+        potential_connectors = []
+        for space_id in range(25):
+            if space_id == crown_id or spaces[space_id]["type"] == "Crown":
+                continue
+            direction_to_crown = get_direction(space_id, crown_id)
+            if direction_to_crown and not has_connection_in_direction(space_id, direction_to_crown):
+                if len(spaces[space_id]["connections"]) < 4:
+                    potential_connectors.append(space_id)
+        
+        if not potential_connectors:
+            all_spaces = [i for i in range(25) if i != crown_id]
+            random.shuffle(all_spaces)
+            for space_id in all_spaces:
+                direction_to_crown = get_direction(space_id, crown_id)
+                if direction_to_crown:
+                    for conn in list(spaces[space_id]["connections"]):
+                        if get_direction(space_id, conn) == direction_to_crown:
+                            spaces[space_id]["connections"].remove(conn)
+                            if space_id in spaces[conn]["connections"]:
+                                spaces[conn]["connections"].remove(space_id)
+                    spaces[space_id]["connections"].append(crown_id)
+                    spaces[crown_id]["connections"] = [connector]
+                    break
+        else:
+            connector = random.choice(potential_connectors)
+            spaces[connector]["connections"].append(crown_id)
+            spaces[crown_id]["connections"] = [connector]
+        
         # Fallback: Connect unvisited spaces
         visited = set()
         queue = deque([start_space_id])
