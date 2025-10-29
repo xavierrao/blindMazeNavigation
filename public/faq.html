@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blind Crown Quest - FAQ</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding-bottom: 50px;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: rgba(60, 47, 47, 0.9);
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-header h1 {
+            color: #d4a017;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .faq-header p {
+            color: #f0e6d2;
+            font-size: 20px;
+        }
+
+        .faq-section {
+            margin-bottom: 40px;
+        }
+
+        .faq-section h2 {
+            color: #d4a017;
+            font-size: 32px;
+            border-bottom: 2px solid #d4a017;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .faq-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: rgba(74, 55, 40, 0.5);
+            border-radius: 8px;
+            border-left: 4px solid #d4a017;
+        }
+
+        .faq-item h3 {
+            color: #d4a017;
+            font-size: 22px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .faq-item h3:hover {
+            color: #e6b800;
+        }
+
+        .faq-item h3::after {
+            content: '▼';
+            font-size: 16px;
+            transition: transform 0.3s;
+        }
+
+        .faq-item h3.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .faq-answer {
+            color: #f0e6d2;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+
+        .faq-answer.hidden {
+            display: none;
+        }
+
+        .faq-answer p {
+            margin-bottom: 15px;
+        }
+
+        .faq-answer ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .faq-answer li {
+            margin-bottom: 8px;
+        }
+
+        .faq-answer code {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #d4a017;
+        }
+
+        .faq-answer strong {
+            color: #d4a017;
+        }
+
+        .faq-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .faq-table th,
+        .faq-table td {
+            border: 1px solid #d4a017;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .faq-table th {
+            background-color: rgba(212, 160, 23, 0.2);
+            color: #d4a017;
+            font-weight: bold;
+        }
+
+        .grid-example {
+            font-family: monospace;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .faq-container {
+                padding: 20px 10px;
+            }
+
+            .faq-header h1 {
+                font-size: 36px;
+            }
+
+            .faq-section h2 {
+                font-size: 26px;
+            }
+
+            .faq-item h3 {
+                font-size: 18px;
+            }
+
+            .faq-answer {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="faq-container">
+        <div class="faq-header">
+            <h1>Blind Crown Quest FAQ</h1>
+            <p>Everything you need to know about the game</p>
+        </div>
+
+        <!-- General Questions -->
+        <div class="faq-section">
+            <h2>General Questions</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What is Blind Crown Quest?</h3>
+                <div class="faq-answer hidden">
+                    <p>Blind Crown Quest is a multiplayer turn-based strategy game where 3 players race to reach the
+                        Crown space while navigating a hidden, procedurally generated 5x5 grid. Players must explore,
+                        collect gold, purchase items, and outsmart opponents to win.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">How many players can play?</h3>
+                <div class="faq-answer hidden">
+                    <p>Exactly 3 players are required for each game. The game will not start until all 3 players have
+                        joined the room.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">How long does a typical game last?</h3>
+                <div class="faq-answer hidden">
+                    <p>Game length varies based on player strategy and luck, but most games last between 15-30 minutes.
+                        With Memory Mode enabled, games may take longer as players must re-explore each round.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">How do I win the game?</h3>
+                <div class="faq-answer hidden">
+                    <p>Be the first player to land on the Crown space with at least 5 gold. You must pay the 5 gold to
+                        claim victory. If you reach the Crown without enough gold, you'll need to earn more before you
+                        can win.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gameplay Questions -->
+        <div class="faq-section">
+            <h2>Gameplay Questions</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What happens if I run out of gold?</h3>
+                <div class="faq-answer hidden">
+                    <p>You can never go below 0 gold. If an effect would make you lose more gold than you have, you'll
+                        be prompted to sell items at half their purchase price to cover the cost. If you can't or won't
+                        sell items, you'll lose whatever gold you have remaining.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What is Memory Mode?</h3>
+                <div class="faq-answer hidden">
+                    <p>When Memory Mode is enabled, the game log clears at the end of each round. This forces players
+                        to remember the map layout, item locations, and player positions without referencing past logs.
+                        It significantly increases difficulty and strategic depth.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What does Random Start Space do?</h3>
+                <div class="faq-answer hidden">
+                    <p>Instead of all players starting on space 12 (the center-ish area), the start space is randomly
+                        selected from any of the 25 spaces. This creates more varied gameplay as the map layout changes
+                        based on the start position.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Can I land on the same space as another player?</h3>
+                <div class="faq-answer hidden">
+                    <p>Yes! Multiple players can occupy the same space. This triggers the Combat wheel and enables
+                        certain items like Close-Quarters Heist.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map & Navigation -->
+        <div class="faq-section">
+            <h2>Map & Navigation</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">How does the map work?</h3>
+                <div class="faq-answer hidden">
+                    <p>The game takes place on a 5x5 grid (25 spaces total) arranged like this:</p>
+                    <div class="grid-example">
+                        0 &nbsp;&nbsp;1 &nbsp;&nbsp;2 &nbsp;&nbsp;3 &nbsp;&nbsp;4<br>
+                        5 &nbsp;&nbsp;6 &nbsp;&nbsp;7 &nbsp;&nbsp;8 &nbsp;&nbsp;9<br>
+                        10 11 12 13 14<br>
+                        15 16 17 18 19<br>
+                        20 21 22 23 24
+                    </div>
+                    <p>Each space has a type (Start, Shop, Good, Bad, etc.) and connections to other spaces.
+                        Connections can be cardinal (N, S, E, W) or diagonal (NE, NW, SE, SW).</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Why can't I see the whole map?</h3>
+                <div class="faq-answer hidden">
+                    <p>The map is intentionally hidden to create a fog-of-war exploration experience. You must discover
+                        connections by attempting to move or using items like Scout Lens. The map is revealed to all
+                        players only when the game ends.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What are "non-adjacent" connections?</h3>
+                <div class="faq-answer hidden">
+                    <p>These are long-range connections between spaces that aren't next to each other on the grid. For
+                        example, space 0 (top-left corner) might have a diagonal connection to space 18 (bottom-right
+                        area). These make navigation more complex and interesting.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Generation Logic -->
+        <div class="faq-section">
+            <h2>Map Generation Logic</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">How is the map generated?</h3>
+                <div class="faq-answer hidden">
+                    <p>The map is procedurally generated using a Python script that runs server-side. Here's the
+                        detailed process:</p>
+
+                    <p><strong>Phase 1: Space Type Assignment</strong></p>
+                    <ul>
+                        <li>1 Start space (default: space 12, or random if enabled)</li>
+                        <li>1 Crown space</li>
+                        <li>1 Shadow Realm space</li>
+                        <li>1 Teleport space</li>
+                        <li>2 Combat spaces</li>
+                        <li>3 Good spaces</li>
+                        <li>3 Bad spaces</li>
+                        <li>3 Shop spaces</li>
+                        <li>Remaining spaces become Neutral</li>
+                    </ul>
+
+                    <p><strong>Phase 2: Outside Space Connections</strong></p>
+                    <p>Spaces on the outer edge (0-4, 5, 9, 10, 14, 15, 19, 20-24) are connected to all cardinal (N,
+                        S, E, W) adjacent outside spaces. This creates a navigable "ring" around the perimeter.</p>
+
+                    <p><strong>Phase 3: Non-Adjacent Connections (5% chance)</strong></p>
+                    <p>Long-range diagonal connections are created with a 5% probability. Each space can only have one
+                        non-adjacent connection per ordinal direction (NW, NE, SW, SE).</p>
+
+                    <p><strong>Phase 4: Cardinal Adjacent Connections (50% chance)</strong></p>
+                    <p>For all spaces, cardinal adjacent connections are created with 50% probability. Maximum of 4
+                        connections per space.</p>
+
+                    <p><strong>Phase 5: Diagonal Removal for Interior Spaces</strong></p>
+                    <p>Spaces not on the outside edge cannot have diagonal connections to immediately adjacent spaces
+                        (but can keep non-adjacent diagonal connections).</p>
+
+                    <p><strong>Phase 6: Crown Connections (Special Rule)</strong></p>
+                    <p>The Crown space gets only ONE bidirectional connection to another space, making it harder to
+                        reach and creating strategic bottlenecks.</p>
+
+                    <p><strong>Phase 7: Validation & Retry</strong></p>
+                    <p>The algorithm validates that:</p>
+                    <ul>
+                        <li>All 25 spaces are reachable from Start</li>
+                        <li>Crown is at least 3 steps away from Start</li>
+                        <li>Crown has exactly 1 incoming connection</li>
+                    </ul>
+                    <p>If validation fails, the process repeats (up to 200 attempts).</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Can two games have identical maps?</h3>
+                <div class="faq-answer hidden">
+                    <p>Extremely unlikely. With random space type assignment, connection probabilities, and multiple
+                        generation phases, the number of possible maps is astronomical. Even with the same start space,
+                        maps will differ dramatically.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Can the map have dead ends?</h3>
+                <div class="faq-answer hidden">
+                    <p>Yes! Some spaces might only have 1 or 2 connections, creating dead-end branches. This is
+                        intentional and adds strategic depth - dead ends might contain valuable shops or dangerous Bad
+                        spaces.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Space Types -->
+        <div class="faq-section">
+            <h2>Space Types</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What does each space type do?</h3>
+                <div class="faq-answer hidden">
+                    <table class="faq-table">
+                        <tr>
+                            <th>Space Type</th>
+                            <th>Effect</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Start</strong></td>
+                            <td>Gain 1 gold when you land here</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Neutral</strong></td>
+                            <td>No effect</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Good</strong></td>
+                            <td>Spin the Good Wheel (mostly positive outcomes)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bad</strong></td>
+                            <td>Spin the Bad Wheel (mostly negative outcomes)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Combat</strong></td>
+                            <td>Spin the Combat Wheel (player vs. player)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shop</strong></td>
+                            <td>Can purchase items while on this space</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Teleport</strong></td>
+                            <td>Randomly teleport to a non-adjacent space</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shadow Realm</strong></td>
+                            <td>Trapped! Must spin Shadow Wheel to escape</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Crown</strong></td>
+                            <td>Win the game if you have 5+ gold</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">How does the Teleport space work?</h3>
+                <div class="faq-answer hidden">
+                    <p>When you land on Teleport, you're randomly moved to any space that is NOT adjacent to your
+                        current position. You might teleport across the entire map or just a few spaces away. You then
+                        resolve the effect of wherever you land.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shadow Realm -->
+        <div class="faq-section">
+            <h2>Shadow Realm</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">How do I escape the Shadow Realm?</h3>
+                <div class="faq-answer hidden">
+                    <p>You must spin the Shadow Wheel on your turn. The wheel has multiple outcomes:</p>
+                    <ul>
+                        <li><strong>Return Home</strong> (increases with each turn): Escape to the Start space</li>
+                        <li><strong>Nothing</strong>: Remain trapped for another turn</li>
+                        <li><strong>Invite Friend</strong>: Pull another player into the Shadow Realm with you</li>
+                        <li><strong>-1 Gold</strong>: Lose 1 gold but remain trapped</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Does the escape chance increase?</h3>
+                <div class="faq-answer hidden">
+                    <p>Yes! Each turn you spend in the Shadow Realm, more "Return Home" options are added to the wheel
+                        (up to 6 total), making escape increasingly likely.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What happens if all players are in the Shadow Realm?</h3>
+                <div class="faq-answer hidden">
+                    <p>An emergency escape sequence activates. Each player has a 50% chance to escape randomly to an
+                        adjacent space. The game retries every 2 seconds until at least one player escapes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <div class="faq-section">
+            <h2>Items</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">When can I buy items?</h3>
+                <div class="faq-answer hidden">
+                    <p>You can purchase items when:</p>
+                    <ul>
+                        <li>You're on a Shop space during your turn, OR</li>
+                        <li>You've been granted shop access via the "Access Shop" Good Wheel result</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Can I use items on other players' turns?</h3>
+                <div class="faq-answer hidden">
+                    <p>No. Items can only be used during your own turn, before you end it.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What are all the available items?</h3>
+                <div class="faq-answer hidden">
+                    <table class="faq-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Cost</th>
+                            <th>Max</th>
+                            <th>Effect</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Scout Lens</strong></td>
+                            <td>2 gold</td>
+                            <td>∞</td>
+                            <td>Reveals all adjacent connected spaces</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chaos Swap</strong></td>
+                            <td>4 gold</td>
+                            <td>2</td>
+                            <td>Randomly swaps two players' positions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Crown Compass</strong></td>
+                            <td>3 gold</td>
+                            <td>3</td>
+                            <td>Shows which direction leads closer to Crown</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Thief's Snare</strong></td>
+                            <td>3 gold</td>
+                            <td>2</td>
+                            <td>Set a trap that steals 2 gold from next player</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bounty Drop</strong></td>
+                            <td>2 gold</td>
+                            <td>∞</td>
+                            <td>Place 3 gold on a random adjacent space</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Misfortune Curse</strong></td>
+                            <td>5 gold</td>
+                            <td>1</td>
+                            <td>Force a player to lose 2 gold</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Close-Quarters Heist</strong></td>
+                            <td>4 gold</td>
+                            <td>2</td>
+                            <td>Steal 4 gold if sharing a space</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Wandering Goblin</strong></td>
+                            <td>5 gold</td>
+                            <td>1</td>
+                            <td>Spawns a goblin that steals from players</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Warding Talisman</strong></td>
+                            <td>6 gold</td>
+                            <td>2</td>
+                            <td>Protects from one negative effect</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">How does Warding Talisman work?</h3>
+                <div class="faq-answer hidden">
+                    <p>The Warding Talisman automatically activates when you would be affected by:</p>
+                    <ul>
+                        <li>Bad Wheel results</li>
+                        <li>Traps set by other players</li>
+                        <li>Certain negative item effects</li>
+                    </ul>
+                    <p>Once triggered, it's consumed and removed from your inventory.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategy -->
+        <div class="faq-section">
+            <h2>Strategy Tips</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What's the best starting strategy?</h3>
+                <div class="faq-answer hidden">
+                    <ul>
+                        <li><strong>Explore efficiently</strong>: Use Scout Lens early to map connections</li>
+                        <li><strong>Balance gold and items</strong>: Don't hoard gold, but don't overspend on items
+                        </li>
+                        <li><strong>Track other players</strong>: Remember where opponents are and what items they have
+                        </li>
+                        <li><strong>Plan Crown route</strong>: Use Crown Compass to navigate efficiently</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Should I buy Scout Lens first?</h3>
+                <div class="faq-answer hidden">
+                    <p>Scout Lens is the most cost-effective exploration tool (2 gold, unlimited quantity). Buying 1-2
+                        early helps you navigate and avoid Bad spaces.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Is it better to rush the Crown or farm gold?</h3>
+                <div class="faq-answer hidden">
+                    <p>Both strategies work! Rushing the Crown with minimal gold (hoping to land on Good/Shop spaces)
+                        is risky but fast. Farming 10+ gold first is safer but gives opponents time to reach the Crown.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="faq-section">
+            <h2>Troubleshooting</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">The map isn't loading</h3>
+                <div class="faq-answer hidden">
+                    <ol>
+                        <li>Ensure Python 3 is installed and in your system PATH</li>
+                        <li>Verify <code>grid_generator.py</code> exists in the <code>public/</code> folder</li>
+                        <li>Check server console for Python errors</li>
+                        <li>Try refreshing the page or creating a new room</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">I can't see movement buttons</h3>
+                <div class="faq-answer hidden">
+                    <p>This usually means:</p>
+                    <ul>
+                        <li>It's not your turn (check player info bar for highlighted current player)</li>
+                        <li>You've already moved this turn (wait for next round)</li>
+                        <li>You're in the Shadow Realm (you must spin the wheel instead)</li>
+                        <li>The game state hasn't synced (refresh and rejoin)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Items aren't showing up</h3>
+                <div class="faq-answer hidden">
+                    <ol>
+                        <li>Check that all image files exist in <code>public/images/items/</code></li>
+                        <li>Verify file names match exactly (case-sensitive)</li>
+                        <li>Clear browser cache and hard refresh (Ctrl+Shift+R)</li>
+                        <li>Check browser console (F12) for image loading errors</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle FAQ answers
+        document.querySelectorAll('.faq-item h3').forEach(header => {
+            header.addEventListener('click', () => {
+                const answer = header.nextElementSibling;
+                answer.classList.toggle('hidden');
+                header.classList.toggle('collapsed');
+            });
+        });
+    </script>
+</body>
+
+</html>

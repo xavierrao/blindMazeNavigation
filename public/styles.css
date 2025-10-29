@@ -32,6 +32,37 @@ body::before {
     z-index: -1;
 }
 
+/* FAQ Button - Always visible */
+.faq-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #d4a017;
+    color: #2b2b2b;
+    padding: 12px 24px;
+    font-size: 18px;
+    border: 2px solid #d4a017;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 9999;
+    transition: all 0.3s;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.faq-button:hover {
+    background-color: #e6b800;
+    border-color: #e6b800;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.faq-button::before {
+    content: '? ';
+    font-weight: bold;
+    font-size: 20px;
+}
+
 /* Hide all containers by default */
 #name-entry,
 #room-container,
@@ -306,6 +337,13 @@ input[type="text"] {
         padding: 20px;
         max-width: 90%;
         min-height: 250px;
+    }
+
+    .faq-button {
+        top: 10px;
+        right: 10px;
+        padding: 8px 16px;
+        font-size: 14px;
     }
 
     h1 {
