@@ -15,13 +15,13 @@ function initSocketListeners() {
     });
 
     socket.on('state', updateState);
-    
+
     socket.on('log', message => {
         const state = getState();
         state.log.push(message);
         updateLog();
     });
-    
+
     socket.on('gameOver', (reason) => {
         const state = getState();
         state.gameOver = true;
@@ -29,22 +29,7 @@ function initSocketListeners() {
         updateUI();
         showBoard();
     });
-    
-    socket.on('roomCreated', ({ roomId, memoryMode }) => {
-        const state = getState();
-        state.roomId = roomId;
-        state.memoryMode = memoryMode;
-        document.getElementById('room-id-display').innerHTML = `
-            <p>Quest Scroll ID: ${roomId} (Share with others to join)</p>
-            <button id="copy-room-id" class="fantasy-button copy-button">Copy Scroll ID</button>
-            <button id="continue-game" class="fantasy-button">Continue to Quest</button>
-        `;
-        document.getElementById('room-id-display').style.display = 'block';
-        document.getElementById('loading-indicator').style.display = 'none';
-        document.getElementById('copy-room-id').addEventListener('click', copyRoomId);
-        document.getElementById('continue-game').addEventListener('click', fetchGrid);
-    });
-    
+
     socket.on('initComplete', ({ turnOrder, currentPlayer }) => {
         console.log('initComplete received, turnOrder:', turnOrder, 'currentPlayer:', currentPlayer);
         const state = getState();
@@ -56,7 +41,7 @@ function initSocketListeners() {
         }
         updateUI();
     });
-    
+
     socket.on('error', (message) => {
         console.error('Server error:', message);
         log(`Error: ${message}`);
@@ -91,9 +76,9 @@ function updateState(newState) {
             return;
         }
     }
-    
+
     console.log('State updated, turnOrder:', state.turnOrder, 'currentPlayer:', state.currentPlayer, 'player positions:', state.players.map(p => `${p.name}: ${p.position}`));
-    
+
     if (!state.players.some(p => p.id === state.playerId) && state.stateSyncRetries < getMaxStateSyncRetries()) {
         console.warn('updateState: Player ID not in state.players, requesting sync', { playerId: state.playerId, players: state.players });
         state.stateSyncRetries++;
@@ -101,14 +86,14 @@ function updateState(newState) {
         setTimeout(updateUI, 500);
         return;
     }
-    
+
     state.stateSyncRetries = 0;
-    
+
     if (!getGrid() && state.roomId && state.players.some(p => p.id === state.playerId)) {
         console.warn('Grid not loaded, requesting grid');
         fetchGrid();
     }
-    
+
     resetUIRetryCount();
     updateUI();
 }

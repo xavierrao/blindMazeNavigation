@@ -11,10 +11,27 @@ const port = 3000;
 
 app.use(express.static('public'));
 
+// Serve specific HTML pages
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'pages', 'name.html'));
+});
+
+app.get('/lobby', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'pages', 'lobby.html'));
+});
+
+app.get('/game/:roomId', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'pages', 'game.html'));
+});
+
+app.get('/faq', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'pages', 'faq.html'));
+});
+
 const rooms = {};
 
 function generateGrid(startSpaceId = 12) {
-    const result = spawnSync('python3', ['public/grid_generator.py', startSpaceId.toString()]);
+    const result = spawnSync('python3', [path.join(__dirname, 'public', 'scripts', 'grid_generator.py'), startSpaceId.toString()]);
     if (result.error) {
         console.error('Error generating grid:', result.error);
         return null;
@@ -64,7 +81,7 @@ app.get('/api/map-image', (req, res) => {
     }));
 
     // Call the map generator with grid data and players data as JSON
-    const result = spawnSync('python3', ['public/map_generator.py', JSON.stringify(grid.spaces), JSON.stringify(playersData)]);
+    const result = spawnSync('python3',[path.join(__dirname, 'public', 'scripts', 'map_generator.py'), JSON.stringify(grid.spaces), JSON.stringify(playersData)]);
     if (result.error || result.status !== 0) {
         console.error('Error generating map image:', result.error || result.stderr.toString());
         res.status(500).send('Failed to generate map image');
@@ -77,6 +94,8 @@ app.get('/api/map-image', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('create', ({ memoryMode, randomStartSpace, name }, callback) => {
+        console.log('Create event received:', { memoryMode, randomStartSpace, name });
+
         const roomId = Math.random().toString(36).substring(2, 10);
         const playerId = Math.random().toString(36).substring(2, 10);
 
@@ -120,20 +139,48 @@ io.on('connection', (socket) => {
         callback({ roomId, playerId, memoryMode, randomStartSpace });
         socket.emit('assignPlayerId', { playerId });
         socket.emit('state', rooms[roomId].state);
-        socket.emit('roomCreated', { roomId, memoryMode });
     });
 
     socket.on('join', ({ roomId, name }, callback) => {
-        if (!rooms[roomId] || rooms[roomId].players.length >= 3) {
-            console.log(`Join failed for ${name}: Room ${roomId} ${!rooms[roomId] ? 'does not exist' : 'is full'}`);
-            callback({ error: !rooms[roomId] ? 'Room does not exist' : 'Room is full' });
+        if (!rooms[roomId]) {
+            console.log(`Join failed for ${name}: Room ${roomId} does not exist`);
+            callback({ error: 'Room does not exist' });
             return;
         }
 
-        const duplicateName = rooms[roomId].players.some(p => p.name.toLowerCase() === name.toLowerCase());
-        if (duplicateName) {
-            console.log(`Join failed for ${name}: Duplicate name in room ${roomId}`);
-            callback({ error: 'A player with that name already exists in this quest. Please choose a different name.' });
+        // Check if this player is already in the room (reconnecting)
+        const existingPlayer = rooms[roomId].players.find(p => p.name.toLowerCase() === name.toLowerCase());
+
+        if (existingPlayer) {
+            // Player is reconnecting
+            console.log(`Player ${name} (${existingPlayer.id}) is reconnecting to room ${roomId}`);
+            socket.join(roomId);
+            socket.playerId = existingPlayer.id;
+            socket.roomId = roomId;
+
+            callback({
+                roomId,
+                playerId: existingPlayer.id,
+                memoryMode: rooms[roomId].state.memoryMode,
+                randomStartSpace: rooms[roomId].state.randomStartSpace
+            });
+
+            socket.emit('assignPlayerId', { playerId: existingPlayer.id });
+            socket.emit('state', rooms[roomId].state);
+
+            if (rooms[roomId].state.initComplete) {
+                socket.emit('initComplete', {
+                    turnOrder: rooms[roomId].state.turnOrder,
+                    currentPlayer: rooms[roomId].state.currentPlayer
+                });
+            }
+            return;
+        }
+
+        // New player joining
+        if (rooms[roomId].players.length >= 3) {
+            console.log(`Join failed for ${name}: Room ${roomId} is full`);
+            callback({ error: 'Room is full' });
             return;
         }
 
@@ -149,7 +196,7 @@ io.on('connection', (socket) => {
         console.log(`Player ${name} (${playerId}) joined room: ${roomId}, Players: ${rooms[roomId].players.length}/3`);
         callback({ roomId, playerId, memoryMode: rooms[roomId].state.memoryMode, randomStartSpace: rooms[roomId].state.randomStartSpace });
         socket.emit('assignPlayerId', { playerId });
-        socket.emit('state', rooms[roomId].state); // Ensure state is sent with playerId
+        socket.emit('state', rooms[roomId].state);
         if (rooms[roomId].players.length === 3) {
             rooms[roomId].state.turnOrder = rooms[roomId].players.map(p => p.id);
             rooms[roomId].state.turnOrder.sort(() => Math.random() - 0.5);
@@ -279,15 +326,28 @@ io.on('connection', (socket) => {
             const player = rooms[socket.roomId].players.find(p => p.id === socket.playerId);
             if (player) {
                 console.log(`Player ${player.name} (${socket.playerId}) disconnected from room ${socket.roomId}`);
-                io.to(socket.roomId).emit('log', `${player.name} has left the quest`);
-                rooms[socket.roomId].players = rooms[socket.roomId].players.filter(p => p.id !== socket.playerId);
-                rooms[socket.roomId].state.players = rooms[socket.roomId].state.players.filter(p => p.id !== socket.playerId);
-                if (rooms[socket.roomId].players.length === 0) {
-                    console.log(`Room ${socket.roomId} is empty, deleting room`);
-                    delete rooms[socket.roomId];
-                } else {
-                    io.to(socket.roomId).emit('state', rooms[socket.roomId].state);
-                }
+                // Don't emit "left the quest" message or remove player immediately
+                // They might be reconnecting (e.g., navigating between pages)
+
+                // Only delete the room if it's been empty for a while
+                // For now, just log the disconnect but keep the room
+                console.log(`Keeping room ${socket.roomId} active for potential reconnection`);
+
+                // Optional: Set a timeout to clean up abandoned rooms after 5 minutes
+                setTimeout(() => {
+                    if (rooms[socket.roomId]) {
+                        const allDisconnected = rooms[socket.roomId].players.every(p => {
+                            // Check if any socket is still connected for this player
+                            const sockets = Array.from(io.sockets.sockets.values());
+                            return !sockets.some(s => s.playerId === p.id);
+                        });
+
+                        if (allDisconnected) {
+                            console.log(`Room ${socket.roomId} has been abandoned, deleting`);
+                            delete rooms[socket.roomId];
+                        }
+                    }
+                }, 300000); // 5 minutes
             }
         }
     });

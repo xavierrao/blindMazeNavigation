@@ -13,7 +13,8 @@ A multiplayer fantasy board game where 3 players race to reach the Crown while n
 - **Item System**: Purchase and use strategic items from shops to gain advantages
 - **Wheel Mechanics**: Land on special spaces to spin wheels with various effects
 - **Shadow Realm**: A dangerous space that traps players until they escape via wheel spin
-- **Real-time Multiplayer**: Play with 2 other friends via room codes
+- **Real-time Multiplayer**: Play with 2 other friends via shareable room URLs
+- **Multi-Page Architecture**: Clean navigation with shareable game links
 
 ## Requirements
 
@@ -47,12 +48,15 @@ npm install express socket.io
    ├── server.js
    ├── package.json
    ├── public/
-   │   ├── index.html
-   │   ├── styles.css
-   │   ├── grid_generator.py
-   │   ├── map_generator.py
+   │   ├── pages/
+   │   │   ├── name.html
+   │   │   ├── lobby.html
+   │   │   ├── game.html
+   │   │   └── faq.html
+   │   ├── css/
+   │   │   └── styles.css
    │   ├── js/
-   │   │   ├── main.js
+   │   │   ├── gameMain.js
    │   │   ├── state.js
    │   │   ├── config.js
    │   │   ├── utils.js
@@ -64,6 +68,9 @@ npm install express socket.io
    │   │   ├── room.js
    │   │   ├── gameplay.js
    │   │   └── ui.js
+   │   ├── scripts/
+   │   │   ├── grid_generator.py
+   │   │   └── map_generator.py
    │   └── images/
    │       └── items/
    │           ├── scoutLens.png
@@ -90,15 +97,39 @@ npm install express socket.io
    ```
 3. Enter your name (max 20 characters)
 4. Either create a new quest or join an existing one with a room code
+5. Share the game URL with friends (e.g., `http://localhost:3000/game/abc123xyz`)
 
 ### Web Deployment
 *(Coming Soon - Will be hosted on a public website for easy access)*
 
+## Navigation Flow
+
+The game uses a multi-page architecture for clean navigation:
+
+1. **`/`** - Name entry page (`name.html`)
+   - Enter your player name (stored in browser)
+   - Redirects to lobby when complete
+
+2. **`/lobby`** - Room creation and joining (`lobby.html`)
+   - Create a new quest with custom options
+   - Join an existing quest with a room code
+   - Copy and share room codes with friends
+
+3. **`/game/:roomId`** - Active game session (`game.html`)
+   - Unique URL for each game room
+   - Shareable link for easy invites
+   - Automatic reconnection on page refresh
+   - Back to lobby button to leave gracefully
+
+4. **`/faq`** - Game documentation (`faq.html`)
+   - Opens in new tab (doesn't interrupt gameplay)
+   - Comprehensive rules and mechanics
+
 ## How to Play
 
 ### Setup
-1. One player creates a room and shares the Quest Scroll ID with others
-2. Two other players join using the room code
+1. One player creates a room and shares the game URL or Quest Scroll ID with others
+2. Two other players join using the URL or room code
 3. Once all 3 players have joined, the game begins automatically
 
 ### Game Options
@@ -167,16 +198,21 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 - Gold must be paid to claim victory
 - Game ends and final map is displayed
 
+### Reconnection & Room Persistence
+- Players can refresh the page and automatically rejoin their game
+- Rooms persist for 5 minutes after all players disconnect
+- Navigating between pages doesn't disrupt the game
+- Player name is used to identify returning players
+
 ## Development Status
 
 ### Known Issues & Worries
 
 #### Critical
 - **Grid Generation**: Crown connections may violate the one-connection-per-direction rule (e.g., Crown attached to node 23 when it already has a northwest connection)
-- **Player Disconnection**: Need to handle graceful player departure and potential game state recovery
 
 #### Bugs to Fix
-- **Shadow Realm Movement**: "Send someone to Shadow Realm" and "Go to Shadow Realm" wheel results don't properly move players
+- **Shadow Realm Movement**: "Send someone to Shadow Realm" and "Go to Shadow Realm" wheel results need verification
 - **Selling System**: Item selling mechanism needs verification and testing
 - **Combat Wheel**: Combat wheel effects need implementation verification
 
@@ -191,8 +227,8 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 #### Medium Priority (Optional Enhancements)
 - [ ] **One-Way Connections**: Add 5% chance for one-way connections to increase map complexity
 - [ ] **Turn Timer**: Implement 60-second countdown for player turns to maintain game pace
-- [ ] **Player Reconnection**: Allow players to reconnect if accidentally disconnected
 - [ ] **Spectator Mode**: Enable spectating for completed games or waiting players
+- [ ] **Room Cleanup**: Implement better room cleanup strategies for abandoned games
 
 #### Low Priority (Quality of Life)
 - [ ] **Sound Effects**: Add audio feedback for actions and wheel spins
@@ -200,6 +236,7 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 - [ ] **Tutorial Mode**: Interactive guide for new players
 - [ ] **Game Statistics**: Track wins, games played, and achievement system
 - [ ] **Custom Themes**: Alternative visual themes (dark mode, etc.)
+- [ ] **Room Browser**: See available public rooms to join
 
 ### Testing Checklist
 - [ ] **Goblin Movement**: Verify goblins move correctly and steal gold as intended
@@ -208,6 +245,8 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 - [ ] **Edge Cases**: Test behavior when multiple players are on same space
 - [ ] **Memory Mode**: Confirm log clears properly each round
 - [ ] **End Game Conditions**: Test victory condition and map generation
+- [ ] **Reconnection**: Test page refresh and URL sharing functionality
+- [ ] **Multi-Page Navigation**: Verify all page transitions work smoothly
 
 ## Technical Details
 
@@ -216,25 +255,48 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 - **Frontend**: Vanilla JavaScript (modular design)
 - **Grid Generation**: Python script creates procedurally generated maps
 - **Map Visualization**: Python matplotlib generates end-game map images
+- **Routing**: Multi-page SPA with clean URL structure
+- **State Management**: LocalStorage for player persistence, Socket.io for real-time sync
+
+### File Organization
+- **Pages**: HTML files in `public/pages/`
+- **Styles**: CSS files in `public/css/`
+- **Scripts**: JavaScript modules in `public/js/`
+- **Python**: Map generation scripts in `public/scripts/`
+- **Assets**: Item sprites in `public/images/items/`
 
 ### Network Communication
 - Real-time multiplayer via WebSocket (Socket.io)
 - Room-based game sessions (supports multiple concurrent games)
 - State synchronization across all clients
-- Automatic reconnection handling
+- Automatic reconnection handling with player name matching
+- Rooms persist for 5 minutes after disconnect for seamless reconnection
+
+### URL Structure
+- `/` - Name entry
+- `/lobby` - Room creation/joining
+- `/game/:roomId` - Active game with unique room ID
+- `/faq` - Game documentation
+
+### Browser Storage
+- `localStorage.playerName` - Player's chosen name
+- `localStorage.playerId` - Unique player identifier
+- `localStorage.roomId` - Current room identifier
 
 ### Browser Compatibility
 - Modern browsers with ES6+ support
 - WebSocket support required
 - Canvas/SVG support for wheel animations
+- LocalStorage support required
 
 ## Troubleshooting
 
 ### Grid Generation Fails
 - Ensure Python 3 is installed and in PATH
-- Verify `grid_generator.py` is in the `public/` directory
+- Verify `grid_generator.py` is in the `public/scripts/` directory
 - Check that matplotlib is installed: `pip install matplotlib`
 - If generation times out, try restarting the server
+- Test the script manually: `python3 public/scripts/grid_generator.py 12`
 
 ### Can't Connect to Game
 - Verify server is running on port 3000
@@ -243,15 +305,27 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 - Try a different browser or clear cache
 
 ### Player State Not Syncing
-- Refresh the page and rejoin with the same name
+- Refresh the page - it should automatically rejoin
 - Check browser console for errors (F12)
-- Verify all players are using the same room code
+- Verify all players are using the same room URL or code
 - Ensure stable internet connection
+- Check that your player name hasn't changed
 
 ### Items Not Displaying
-- Check that all item sprite images exist in `public/images/items/`
-- Verify image file names match exactly (case-sensitive)
+- Verify all item sprite images exist in `public/images/items/`
+- Check that image file names match exactly (case-sensitive)
 - Clear browser cache and hard reload (Ctrl+Shift+R)
+- Ensure images use absolute paths (starting with `/`)
+
+### Room Doesn't Exist Error
+- The room may have expired (5-minute timeout after all players leave)
+- Create a new room and share the new URL
+- Ensure the room creator hasn't closed their browser
+
+### "Back to Lobby" Not Working
+- Check browser console for errors
+- Ensure server is still running
+- Try manually navigating to `/lobby`
 
 ## Contributing
 
@@ -271,6 +345,7 @@ A fantasy-themed multiplayer board game built with Node.js, Socket.io, and vanil
 - Python 3 & Matplotlib (Map generation)
 - Vanilla JavaScript (Frontend)
 - HTML5 & CSS3
+- LocalStorage API
 
 ## License
 
@@ -278,6 +353,6 @@ This project is provided as-is for educational and entertainment purposes.
 
 ---
 
-**Current Version**: Beta 1.0  
+**Current Version**: Beta 1.1 (Multi-Page Update)
 **Last Updated**: 2025  
-**Status**: In Development - Local play available, web deployment coming soon
+**Status**: In Development - Local play available with shareable URLs, web deployment coming soon

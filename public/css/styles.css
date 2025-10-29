@@ -32,37 +32,6 @@ body::before {
     z-index: -1;
 }
 
-/* FAQ Button - Always visible */
-.faq-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #d4a017;
-    color: #2b2b2b;
-    padding: 12px 24px;
-    font-size: 18px;
-    border: 2px solid #d4a017;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 9999;
-    transition: all 0.3s;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.faq-button:hover {
-    background-color: #e6b800;
-    border-color: #e6b800;
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-}
-
-.faq-button::before {
-    content: '? ';
-    font-weight: bold;
-    font-size: 20px;
-}
-
 /* Hide all containers by default */
 #name-entry,
 #room-container,
@@ -339,13 +308,6 @@ input[type="text"] {
         min-height: 250px;
     }
 
-    .faq-button {
-        top: 10px;
-        right: 10px;
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-
     h1 {
         font-size: 32px;
     }
@@ -565,4 +527,85 @@ input[type="text"] {
 .item-container:hover .item-tooltip {
     visibility: visible;
     opacity: 1;
+}
+
+/* Footer Styles */
+.game-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(43, 43, 43, 0.95);
+    border-top: 2px solid #d4a017;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #f0e6d2;
+    z-index: 999;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.game-footer a {
+    color: #d4a017;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.game-footer a:hover {
+    color: #e6b800;
+    text-decoration: underline;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-divider {
+    color: #d4a017;
+    font-weight: bold;
+}
+
+.github-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+/* Adjust body padding to account for fixed footer */
+body {
+    padding-bottom: 60px;
+}
+
+/* Responsive footer */
+@media (max-width: 768px) {
+    .game-footer {
+        padding: 12px 15px;
+        font-size: 12px;
+    }
+    
+    .footer-content {
+        gap: 10px;
+    }
+    
+    .footer-divider {
+        display: none;
+    }
+    
+    body {
+        padding-bottom: 80px;
+    }
 }

@@ -36,7 +36,7 @@ const shopItems = [
         cost: 2,
         max: Infinity,
         effect: null, // Will be set in items.js
-        sprite: 'images/items/scoutLens.png',
+        sprite: '/images/items/scoutLens.png',
         description: 'Reveals all adjacent connected spaces (types, players, items/gold/traps/goblins on them) and broadcasts this info to the log for all players.'
     },
     {
@@ -44,7 +44,7 @@ const shopItems = [
         cost: 4,
         max: 2,
         effect: null,
-        sprite: 'images/items/chaosSwap.png',
+        sprite: '/images/items/chaosSwap.png',
         description: 'Randomly swaps positions of two random players (could include you). Positions are broadcasted to all players.'
     },
     {
@@ -52,7 +52,7 @@ const shopItems = [
         cost: 3,
         max: 3,
         effect: null,
-        sprite: 'images/items/crownCompass.png',
+        sprite: '/images/items/crownCompass.png',
         description: 'Broadcasts which connected adjacent space(s) lead closer to the Crown (all equal options listed; based on shortest path).'
     },
     {
@@ -60,7 +60,7 @@ const shopItems = [
         cost: 3,
         max: 2,
         effect: null,
-        sprite: 'images/items/thiefsSnare.png',
+        sprite: '/images/items/thiefsSnare.png',
         description: 'Sets a trap on current space that steals 2 gold from the next player to land there (persists until triggered).'
     },
     {
@@ -68,7 +68,7 @@ const shopItems = [
         cost: 2,
         max: Infinity,
         effect: null,
-        sprite: 'images/items/bountyDrop.png',
+        sprite: '/images/items/bountyDrop.png',
         description: 'Places 3 gold on a random adjacent connected space. First player to land there claims it.'
     },
     {
@@ -76,7 +76,7 @@ const shopItems = [
         cost: 5,
         max: 1,
         effect: null,
-        sprite: 'images/items/misfortuneCurse.png',
+        sprite: '/images/items/misfortuneCurse.png',
         description: 'Forces a chosen player to lose 2 gold immediately (or sell items if they don\'t have enough).'
     },
     {
@@ -84,7 +84,7 @@ const shopItems = [
         cost: 4,
         max: 2,
         effect: null,
-        sprite: 'images/items/closeQuartersHeist.png',
+        sprite: '/images/items/closeQuartersHeist.png',
         description: 'If another player is on your space, steal 4 gold from them. Only works if you share a space with another player.'
     },
     {
@@ -92,7 +92,7 @@ const shopItems = [
         cost: 5,
         max: 1,
         effect: null,
-        sprite: 'images/items/wanderingGoblin.png',
+        sprite: '/images/items/wanderingGoblin.png',
         description: 'Spawns a goblin on your space that moves randomly each round end. Steals 1 gold from the first player it encounters (max 5 rounds active).'
     },
     {
@@ -100,7 +100,7 @@ const shopItems = [
         cost: 6,
         max: 2,
         effect: null,
-        sprite: 'images/items/wardingTalisman.png',
+        sprite: '/images/items/wardingTalisman.png',
         description: 'Repels one negative effect (e.g., Bad wheel, trap, or other harmful effects). Auto-consumed when triggered.'
     }
 ];
