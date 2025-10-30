@@ -220,8 +220,8 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 ### Planned Features
 
 #### High Priority (Necessary Implementations)
-- ~~[ ] **Fix Grid Generation**: Prevent invalid Crown connections that violate directional rules~~ &emsp;✅ **COMPLETED**
-- ~~[ ] **Improve Map Readability**: Make non-adjacent connections easier to distinguish~~ &emsp;✅ **COMPLETED**
+- [x] **Fix Grid Generation**: Prevent invalid Crown connections that violate directional rules &emsp;✅ **COMPLETED**
+- [x] **Improve Map Readability**: Make non-adjacent connections easier to distinguish &emsp;✅ **COMPLETED**
 - [ ] **Fix Shadow Realm Movement**: Ensure all Shadow Realm teleportation effects work correctly
 - [ ] **Verify Selling System**: Test and confirm item selling when players lack gold
 - [ ] **Combat Wheel Review**: Audit and fix combat wheel implementation
