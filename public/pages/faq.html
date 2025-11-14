@@ -463,6 +463,84 @@
             </div>
         </div>
 
+        <!-- Combat Wheel & Mini-Games -->
+        <div class="faq-section">
+            <h2>Combat Wheel & Mini-Games</h2>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What happens when I land on a Combat space?</h3>
+                <div class="faq-answer hidden">
+                    <p>When you land on a Combat space, you spin the Combat Wheel. The wheel may trigger one of three
+                        competitive mini-games between all three players, or have other player-interaction
+                        effects.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What are the Combat mini-games?</h3>
+                <div class="faq-answer hidden">
+                    <p>There are three mini-games that can be triggered from the Combat Wheel. All three players
+                        compete simultaneously in these games:</p>
+
+                    <p><strong>1. Three-Player Tic-Tac-Toe (4x4 Grid)</strong></p>
+                    <ul>
+                        <li>Played on a 4x4 board with three symbols: X, O, and △</li>
+                        <li>Each player has 4 pieces to place (12 total pieces)</li>
+                        <li>Phase 1 (Placing): Players alternate placing one piece on any empty square</li>
+                        <li>If someone makes 3 in a row while placing, they win immediately</li>
+                        <li>Phase 2 (Moving): Once all pieces are placed, players take turns picking up one of their
+                            pieces and moving it to any empty square</li>
+                        <li>After each move, check for 3 in a row</li>
+                        <li>Important: Only the current player can win on their own turn (prevents two players from
+                            teaming up to give the third player a win)</li>
+                    </ul>
+
+                    <p><strong>2. Tri-Color Reversi (6x6 Blitz)</strong></p>
+                    <ul>
+                        <li>3-player version of Othello played on a 6x6 board</li>
+                        <li>Three colors: Black, White, and Red</li>
+                        <li>Each player starts with 2 tiles in the center 3x3 area</li>
+                        <li>Modified flipping rule: When you place a tile, you flip any straight line of contiguous
+                            tiles of a single color if your tile brackets them</li>
+                        <li>Each player gets 30 seconds total for all moves (like a speed chess clock)</li>
+                        <li>Game ends when no valid moves remain for all players or time runs out</li>
+                        <li>Player with the most tiles of their color wins</li>
+                    </ul>
+
+                    <p><strong>3. Triple Clash</strong></p>
+                    <ul>
+                        <li>All three players compete in simultaneous betting rounds</li>
+                        <li>Each player starts with 5 "coins" (separate from main game gold)</li>
+                        <li>Each round, all players secretly choose to bet 0-3 coins</li>
+                        <li>Reveal: The highest unique bet wins the round, but that player loses those coins</li>
+                        <li>If the highest bets are tied, all tied players lose their coins but nobody wins the round
+                        </li>
+                        <li>Players who bet lower than the highest keep their coins</li>
+                        <li>Game ends when all players run out of coins</li>
+                        <li>Whoever won the most rounds wins the mini-game</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">What do I get for winning a Combat mini-game?</h3>
+                <div class="faq-answer hidden">
+                    <p>Combat mini-game rewards vary and are determined by the specific Combat Wheel result that
+                        triggered the game. Rewards might include gold, items, position swaps, or other strategic
+                        advantages.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="collapsed">Can I decline to play a Combat mini-game?</h3>
+                <div class="faq-answer hidden">
+                    <p>No, Combat mini-games are mandatory when triggered by the Combat Wheel. All three players must
+                        participate. However, they're designed to be quick (especially Tri-Color Reversi with its
+                        30-second time limit) so they don't significantly slow down the main game.</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Items -->
         <div class="faq-section">
             <h2>Items</h2>
@@ -636,52 +714,4 @@
                 <h3 class="collapsed">Items aren't showing up</h3>
                 <div class="faq-answer hidden">
                     <ol>
-                        <li>Check that all image files exist in <code>public/images/items/</code></li>
-                        <li>Verify file names match exactly (case-sensitive)</li>
-                        <li>Clear browser cache and hard refresh (Ctrl+Shift+R)</li>
-                        <li>Check browser console (F12) for image loading errors</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Game Footer - Add before closing </body> tag -->
-    <footer class="game-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <span>© 2025 Blind Crown Quest</span>
-            </div>
-
-            <span class="footer-divider">•</span>
-
-            <div class="footer-section">
-                <svg class="github-icon" viewBox="0 0 16 16" fill="#d4a017" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
-                </svg>
-                <a href="https://github.com/yourusername/blind-crown-quest" target="_blank"
-                    rel="noopener noreferrer">GitHub</a>
-            </div>
-
-            <span class="footer-divider">•</span>
-
-            <div class="footer-section">
-                <span>Version Beta 1.1</span>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Toggle FAQ answers
-        document.querySelectorAll('.faq-item h3').forEach(header => {
-            header.addEventListener('click', () => {
-                const answer = header.nextElementSibling;
-                answer.classList.toggle('hidden');
-                header.classList.toggle('collapsed');
-            });
-        });
-    </script>
-</body>
-
-</html>
+                        <li>Check that all image files exist in <code>

@@ -187,6 +187,36 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 - Escape chances increase with each turn spent there (more "Return Home" options)
 - If all players are trapped, emergency escape sequence activates
 
+### Combat Wheel Mini-Games
+When landing on a Combat space, players spin the Combat Wheel which may trigger one of these 3-player mini-games:
+
+1. **Three-Player Tic-Tac-Toe (4x4 Grid)**
+   - Played on a 4x4 board with symbols X, O, and △
+   - Each player has 4 pieces to place
+   - Phase 1 (Placing): Players alternate placing one piece on any empty square
+   - If someone makes 3 in a row while placing, they win immediately
+   - Phase 2 (Moving): After all pieces placed, players take turns moving one of their pieces to any empty square
+   - After each move, check for 3 in a row
+   - Only the current player can win on their own turn (prevents kingmaking)
+
+2. **Tri-Color Reversi (6x6 Blitz)**
+   - 3-player version of Othello on a 6x6 board
+   - Colors: Black, White, Red (each player starts with 2 tiles in center)
+   - Modified flipping: When you place a tile, flip any straight line of contiguous tiles of a single color if your tile brackets them
+   - Each player gets 30 seconds total for all moves (chess clock style)
+   - Game ends when no valid moves remain or time runs out
+   - Player with most tiles of their color wins
+
+3. **Triple Clash**
+   - 3-player simultaneous betting game
+   - Each player starts with 5 coins (separate from game gold)
+   - Each round, all players secretly bet 0-3 coins
+   - Reveal: Highest unique bet wins the round but loses those coins
+   - If highest bets are tied, all tied players lose their coins but nobody wins the round
+   - Players who bet lower keep their coins
+   - Game ends when all players are out of coins
+   - Player who won the most rounds wins
+
 ### Traps & Goblins
 - Traps persist until triggered by another player (not the owner)
 - Goblins move randomly each round for up to 5 rounds
@@ -213,18 +243,19 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 - ~~**Map Visualization**: Non-adjacent connections difficult to distinguish when many exist (e.g., space 0→24 and space 6→18 connection lines overlapping)~~ &emsp;✅ **FIXED** - Implemented curved Bezier lines with color coding and labels for non-adjacent connections
 
 #### Bugs to Fix
+- **Shop Update**: Item quantity in the shop is calculated by a player's inventory so when a player uses an item, it replenishes itself in the shop
 - **Shadow Realm Movement**: "Send someone to Shadow Realm" and "Go to Shadow Realm" wheel results need verification
 - **Selling System**: Item selling mechanism needs verification and testing
-- **Combat Wheel**: Combat wheel effects need implementation verification
 
 ### Planned Features
 
 #### High Priority (Necessary Implementations)
 - [x] **Fix Grid Generation**: Prevent invalid Crown connections that violate directional rules &emsp;✅ **COMPLETED**
 - [x] **Improve Map Readability**: Make non-adjacent connections easier to distinguish &emsp;✅ **COMPLETED**
+- [ ] **Reimplement Item Quantity Logic in Shop**: Make shop item quantity not dependent on player inventory
 - [ ] **Fix Shadow Realm Movement**: Ensure all Shadow Realm teleportation effects work correctly
 - [ ] **Verify Selling System**: Test and confirm item selling when players lack gold
-- [ ] **Combat Wheel Review**: Audit and fix combat wheel implementation
+- [ ] **Implement Combat Mini-Games**: Code the three combat wheel mini-games (Tic-Tac-Toe, Mini Othello, Coin Clash)
 
 #### Medium Priority (Optional Enhancements)
 - [ ] **One-Way Connections**: Add 5% chance for one-way connections to increase map complexity
@@ -243,6 +274,7 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 ### Testing Checklist
 - [ ] **Goblin Movement**: Verify goblins move correctly and steal gold as intended
 - [ ] **All Wheel Results**: Test each wheel outcome across all wheel types
+- [ ] **Combat Mini-Games**: Test all three mini-games (Tic-Tac-Toe, Mini Othello, Coin Clash) for bugs and fairness
 - [ ] **Item Effects**: Verify all 9 items work as described
 - [ ] **Edge Cases**: Test behavior when multiple players are on same space
 - [ ] **Memory Mode**: Confirm log clears properly each round
