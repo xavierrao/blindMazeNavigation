@@ -47,6 +47,97 @@ function initSocketListeners() {
         log(`Error: ${message}`);
         alert(`Server error: ${message}`);
     });
+
+    socket.on('minigameStateUpdate', (gameState) => {
+        console.log('Received mini-game state update:', gameState.type, 'hasEnded:', gameState.gameData?.hasEnded, 'endScreenShown:', miniGameState.endScreenShown);
+
+        // Update local mini-game state
+        Object.assign(miniGameState, gameState);
+
+        // Check if any mini-game just ended
+        if (gameState.gameData && gameState.gameData.hasEnded && miniGameState.active && !miniGameState.endScreenShown) {
+            console.log('Showing end screen for', gameState.type);
+            miniGameState.endScreenShown = true;
+
+            // Show appropriate end screen based on game type
+            if (gameState.type === 'tictactoe') {
+                endTicTacToe();
+            } else if (gameState.type === 'reversi') {
+                endReversi();
+            } else if (gameState.type === 'coinclash') {
+                endCoinClash();
+            }
+            return;
+        }
+
+        // Refresh the mini-game UI if active and not ended
+        if (miniGameState.active && !gameState.gameData?.hasEnded) {
+            if (miniGameState.type === 'tictactoe') {
+                showTicTacToeModal();
+            } else if (miniGameState.type === 'reversi') {
+                showReversiModal();
+            } else if (miniGameState.type === 'coinclash') {
+                showCoinClashModal();
+            }
+        }
+    });
+
+    socket.on('minigameStart', ({ combatResult, gameType }) => {
+        console.log('Mini-game starting for all players, type:', gameType, 'combat result:', combatResult);
+
+        const state = getState();
+        const playerIds = state.players.map(p => p.id);
+
+        // Start the specific mini-game
+        const onComplete = (winnerId) => {
+            const winner = state.players.find(p => p.id === winnerId);
+            const grid = getGrid();
+
+            // Award based on combat wheel result
+            if (combatResult === 'Steal') {
+                state.players.forEach(p => {
+                    if (p.id !== winnerId && p.gold > 0) {
+                        const stolen = Math.min(2, p.gold);
+                        p.gold -= stolen;
+                        winner.gold += stolen;
+                    }
+                });
+                log(`Combat: ${winner.name} won the mini-game and stole 2 gold from each opponent!`);
+            } else if (combatResult === 'Shadow') {
+                const shadowRealm = grid.spaces.find(s => s.type === 'ShadowRealm');
+                state.players.forEach(p => {
+                    if (p.id !== winnerId && shadowRealm) {
+                        p.position = shadowRealm.id;
+                        p.shadowTurns = (p.shadowTurns || 0) + 1;
+                    }
+                });
+                log(`Combat: ${winner.name} won the mini-game! Other players sent to Shadow Realm.`);
+            } else if (combatResult === 'Truce') {
+                winner.gold += 3;
+                state.players.forEach(p => {
+                    if (p.id !== winnerId) {
+                        p.gold += 1;
+                    }
+                });
+                log(`Combat: ${winner.name} won the mini-game and gained 3 gold! Others gained 1 gold.`);
+            } else {
+                winner.gold += 2;
+                log(`Combat: ${winner.name} won the mini-game and gained 2 gold.`);
+            }
+
+            getSocket().emit('update', { roomId: state.roomId, state });
+            updateUI();
+        };
+
+        // Launch the specified mini-game
+        if (gameType === 'tictactoe') {
+            initTicTacToe(playerIds, onComplete);
+        } else if (gameType === 'reversi') {
+            initReversi(playerIds, onComplete);
+        } else if (gameType === 'coinclash') {
+            initCoinClash(playerIds, onComplete);
+        }
+    });
 }
 
 function updateState(newState) {

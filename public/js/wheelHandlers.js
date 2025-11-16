@@ -1,5 +1,3 @@
-// wheelHandlers.js - Handle wheel spin results
-
 function handleGoodWheelResult(result) {
     const state = getState();
     const player = state.players.find(p => p.id === state.playerId);
@@ -209,35 +207,20 @@ function handleShadowWheelResult(result) {
 
 function handleCombatWheelResult(result) {
     const state = getState();
-    const grid = getGrid();
-    const player = state.players.find(p => p.id === state.playerId);
-    const occupants = state.players.filter(p => p.position === player.position);
 
-    if (result === 'Steal' && occupants.length > 1) {
-        const target = shuffle(occupants.filter(p => p.id !== player.id))[0];
-        if (target) {
-            const amount = Math.min(target.gold, 1);
-            sellItemsFor(amount - target.gold, target);
-            if (target.gold >= amount) {
-                target.gold -= amount;
-                player.gold += amount;
-                log(`Combat: ${player.name} stole 1 gold from ${target.name}`);
-            }
-        }
-    } else if (result === 'Shadow' && occupants.length > 1) {
-        const target = shuffle(occupants.filter(p => p.id !== player.id))[0];
-        const shadowRealm = grid.spaces.find(s => s.type === 'ShadowRealm');
-        if (target && shadowRealm) {
-            target.position = shadowRealm.id;
-            log(`Combat: ${target.name} sent to Shadow Realm`);
-        }
-    } else if (result === 'Truce') {
-        occupants.forEach(p => p.gold += 1);
-        log(`Combat: All players gain 1 gold (truce)`);
-    } else if (result === 'No Effect') {
-        log(`Combat: No effect`);
+    log(`Combat wheel landed on: ${result}. Starting mini-game...`);
+
+    // Only the current player (who spun) should initiate the mini-game
+    if (state.currentPlayer === state.playerId) {
+        // Randomly select which mini-game to play
+        const games = ['tictactoe', 'reversi', 'coinclash'];
+        const selectedGame = games[Math.floor(Math.random() * games.length)];
+
+        // Broadcast mini-game start to ALL players with the selected game
+        getSocket().emit('startMinigame', {
+            roomId: state.roomId,
+            combatResult: result,
+            gameType: selectedGame // Include the selected game type
+        });
     }
-
-    getSocket().emit('update', { roomId: state.roomId, state });
-    updateUI();
 }

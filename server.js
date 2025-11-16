@@ -81,7 +81,7 @@ app.get('/api/map-image', (req, res) => {
     }));
 
     // Call the map generator with grid data and players data as JSON
-    const result = spawnSync('python3',[path.join(__dirname, 'public', 'scripts', 'map_generator.py'), JSON.stringify(grid.spaces), JSON.stringify(playersData)]);
+    const result = spawnSync('python3', [path.join(__dirname, 'public', 'scripts', 'map_generator.py'), JSON.stringify(grid.spaces), JSON.stringify(playersData)]);
     if (result.error || result.status !== 0) {
         console.error('Error generating map image:', result.error || result.stderr.toString());
         res.status(500).send('Failed to generate map image');
@@ -300,6 +300,33 @@ io.on('connection', (socket) => {
         if (rooms[roomId]) {
             io.to(roomId).emit('state', rooms[roomId].state);
         }
+    });
+
+    socket.on('startMinigame', ({ roomId, combatResult, gameType }) => {
+        if (!rooms[roomId]) {
+            socket.emit('error', 'Room does not exist');
+            return;
+        }
+
+        console.log(`Starting mini-game for room ${roomId}, type: ${gameType}, combat result: ${combatResult}`);
+
+        // Broadcast to ALL players in the room with the same game type
+        io.to(roomId).emit('minigameStart', { combatResult, gameType });
+    });
+
+    socket.on('minigameUpdate', ({ roomId, gameState }) => {
+        if (!rooms[roomId]) {
+            socket.emit('error', 'Room does not exist');
+            return;
+        }
+
+        // Store mini-game state in room
+        rooms[roomId].miniGameState = gameState;
+
+        console.log(`Mini-game update for room ${roomId}:`, gameState.type, gameState.currentPlayerIndex);
+
+        // Broadcast mini-game state to all players in room
+        io.to(roomId).emit('minigameStateUpdate', gameState);
     });
 
     socket.on('requestState', ({ roomId }) => {
