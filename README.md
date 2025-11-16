@@ -1,6 +1,6 @@
 # Blind Crown Quest
 
-A multiplayer fantasy board game where 3 players race to reach the Crown while navigating a mysterious grid filled with shops, traps, combat, and the dreaded Shadow Realm.
+A multiplayer fantasy board game where 3 players race to reach the Crown while navigating a mysterious grid filled with shops, traps, combat mini-games, and the dreaded Shadow Realm.
 
 ## Game Overview
 
@@ -12,6 +12,7 @@ A multiplayer fantasy board game where 3 players race to reach the Crown while n
 - **Random Start Space**: Option to randomize starting positions for added variety
 - **Item System**: Purchase and use strategic items from shops to gain advantages
 - **Wheel Mechanics**: Land on special spaces to spin wheels with various effects
+- **Combat Mini-Games**: Three competitive mini-games triggered by Combat spaces
 - **Shadow Realm**: A dangerous space that traps players until they escape via wheel spin
 - **Real-time Multiplayer**: Play with 2 other friends via shareable room URLs
 - **Multi-Page Architecture**: Clean navigation with shareable game links
@@ -67,6 +68,7 @@ npm install express socket.io
    │   │   ├── items.js
    │   │   ├── room.js
    │   │   ├── gameplay.js
+   │   │   ├── minigames.js
    │   │   └── ui.js
    │   ├── scripts/
    │   │   ├── grid_generator.py
@@ -153,12 +155,47 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 | **Start** | Gain 1 gold |
 | **Good** | Spin the Good Wheel (positive effects) |
 | **Bad** | Spin the Bad Wheel (negative effects) |
-| **Combat** | Spin the Combat Wheel (player interaction) |
+| **Combat** | Spin the Combat Wheel, then all players compete in a mini-game |
 | **Shop** | Access to purchase items |
 | **Neutral** | No effect |
 | **Teleport** | Randomly teleport to a non-adjacent space |
 | **Shadow Realm** | Trapped until you spin to escape |
 | **Crown** | Win the game if you have 5+ gold |
+
+### Combat Mini-Games
+
+When landing on a Combat space, you spin the Combat Wheel to determine the reward, then all three players compete in one of these mini-games. The winner receives the Combat Wheel reward!
+
+#### 1. Three-Player Tic-Tac-Toe (4x4 Grid)
+- Played on a 4x4 board with symbols X, O, and △
+- Each player has 3 pieces that can be placed on the board
+- When a player has 3 pieces placed, placing a new piece removes their oldest piece
+- First player to get 3 in a row (horizontal, vertical, or diagonal) wins
+- Only the current player can win on their own turn (prevents kingmaking)
+
+#### 2. Tri-Color Reversi (6x6 Grid)
+- 3-player version of Othello on a 6x6 board
+- Colors: ⚫ Black, ⚪ White, 🔴 Red (each player starts with 2 tiles in center)
+- Modified flipping: When you place a tile, flip any straight line of contiguous tiles of a single color if your tile brackets them
+- Game ends when no valid moves remain for all players
+- Player with most tiles of their color wins
+
+#### 3. Triple Clash
+- 3-player simultaneous betting game
+- Each player starts with 5 coins (separate from game gold)
+- Each round, all players secretly bet 0-3 coins
+- Reveal: Highest unique bet wins the round but loses those coins
+- If highest bets are tied, all tied players lose their coins but nobody wins the round
+- Players who bet lower keep their coins
+- Game ends when all players are out of coins
+- Player who won the most rounds wins
+
+### Combat Wheel Rewards
+The winner of the mini-game receives one of these rewards:
+- **Steal**: Winner steals 2 gold from each opponent
+- **Shadow**: All losers are sent to the Shadow Realm
+- **Truce**: Winner gets 3 gold, losers get 1 gold each
+- **No Effect**: Winner gets 2 gold
 
 ### Items
 
@@ -187,36 +224,6 @@ Be the first player to reach the Crown space with at least 5 gold to win!
 - Escape chances increase with each turn spent there (more "Return Home" options)
 - If all players are trapped, emergency escape sequence activates
 
-### Combat Wheel Mini-Games
-When landing on a Combat space, players spin the Combat Wheel which may trigger one of these 3-player mini-games:
-
-1. **Three-Player Tic-Tac-Toe (4x4 Grid)**
-   - Played on a 4x4 board with symbols X, O, and △
-   - Each player has 4 pieces to place
-   - Phase 1 (Placing): Players alternate placing one piece on any empty square
-   - If someone makes 3 in a row while placing, they win immediately
-   - Phase 2 (Moving): After all pieces placed, players take turns moving one of their pieces to any empty square
-   - After each move, check for 3 in a row
-   - Only the current player can win on their own turn (prevents kingmaking)
-
-2. **Tri-Color Reversi (6x6 Blitz)**
-   - 3-player version of Othello on a 6x6 board
-   - Colors: Black, White, Red (each player starts with 2 tiles in center)
-   - Modified flipping: When you place a tile, flip any straight line of contiguous tiles of a single color if your tile brackets them
-   - Each player gets 30 seconds total for all moves (chess clock style)
-   - Game ends when no valid moves remain or time runs out
-   - Player with most tiles of their color wins
-
-3. **Triple Clash**
-   - 3-player simultaneous betting game
-   - Each player starts with 5 coins (separate from game gold)
-   - Each round, all players secretly bet 0-3 coins
-   - Reveal: Highest unique bet wins the round but loses those coins
-   - If highest bets are tied, all tied players lose their coins but nobody wins the round
-   - Players who bet lower keep their coins
-   - Game ends when all players are out of coins
-   - Player who won the most rounds wins
-
 ### Traps & Goblins
 - Traps persist until triggered by another player (not the owner)
 - Goblins move randomly each round for up to 5 rounds
@@ -236,11 +243,15 @@ When landing on a Combat space, players spin the Combat Wheel which may trigger 
 
 ## Development Status
 
-### Known Issues & Worries
+### Recently Completed ✅
 
-#### Critical
-- ~~**Grid Generation**: Crown connections may violate the one-connection-per-direction rule (e.g., Crown attached to node 23 when it already has a northwest connection)~~ &emsp;✅ **FIXED** - Crown now properly validates directional uniqueness before connecting
-- ~~**Map Visualization**: Non-adjacent connections difficult to distinguish when many exist (e.g., space 0→24 and space 6→18 connection lines overlapping)~~ &emsp;✅ **FIXED** - Implemented curved Bezier lines with color coding and labels for non-adjacent connections
+- **Combat Mini-Games Implementation**: All three mini-games (Tic-Tac-Toe, Reversi, Triple Clash) are fully functional
+- **Grid Generation Fix**: Crown connections now properly validate directional uniqueness
+- **Map Visualization**: Curved Bezier lines with color coding for non-adjacent connections
+- **Mini-Game State Synchronization**: Real-time state updates across all players during mini-games
+- **End Game Screens**: Countdown timers and winner displays for all mini-games
+
+### Known Issues & Worries
 
 #### Bugs to Fix
 - **Shop Update**: Item quantity in the shop is calculated by a player's inventory so when a player uses an item, it replenishes itself in the shop
@@ -250,12 +261,12 @@ When landing on a Combat space, players spin the Combat Wheel which may trigger 
 ### Planned Features
 
 #### High Priority (Necessary Implementations)
-- [x] **Fix Grid Generation**: Prevent invalid Crown connections that violate directional rules &emsp;✅ **COMPLETED**
-- [x] **Improve Map Readability**: Make non-adjacent connections easier to distinguish &emsp;✅ **COMPLETED**
+- [x] **Fix Grid Generation**: Prevent invalid Crown connections that violate directional rules ✅ **COMPLETED**
+- [x] **Improve Map Readability**: Make non-adjacent connections easier to distinguish ✅ **COMPLETED**
+- [x] **Implement Combat Mini-Games**: Code the three combat wheel mini-games ✅ **COMPLETED**
 - [ ] **Reimplement Item Quantity Logic in Shop**: Make shop item quantity not dependent on player inventory
 - [ ] **Fix Shadow Realm Movement**: Ensure all Shadow Realm teleportation effects work correctly
 - [ ] **Verify Selling System**: Test and confirm item selling when players lack gold
-- [ ] **Implement Combat Mini-Games**: Code the three combat wheel mini-games (Tic-Tac-Toe, Mini Othello, Coin Clash)
 
 #### Medium Priority (Optional Enhancements)
 - [ ] **One-Way Connections**: Add 5% chance for one-way connections to increase map complexity
@@ -274,7 +285,7 @@ When landing on a Combat space, players spin the Combat Wheel which may trigger 
 ### Testing Checklist
 - [ ] **Goblin Movement**: Verify goblins move correctly and steal gold as intended
 - [ ] **All Wheel Results**: Test each wheel outcome across all wheel types
-- [ ] **Combat Mini-Games**: Test all three mini-games (Tic-Tac-Toe, Mini Othello, Coin Clash) for bugs and fairness
+- [x] **Combat Mini-Games**: Test all three mini-games for bugs and fairness ✅ **COMPLETED**
 - [ ] **Item Effects**: Verify all 9 items work as described
 - [ ] **Edge Cases**: Test behavior when multiple players are on same space
 - [ ] **Memory Mode**: Confirm log clears properly each round
@@ -305,6 +316,7 @@ When landing on a Combat space, players spin the Combat Wheel which may trigger 
 - State synchronization across all clients
 - Automatic reconnection handling with player name matching
 - Rooms persist for 5 minutes after disconnect for seamless reconnection
+- Mini-game state broadcasting for synchronized gameplay
 
 ### URL Structure
 - `/` - Name entry
@@ -351,6 +363,13 @@ When landing on a Combat space, players spin the Combat Wheel which may trigger 
 - Clear browser cache and hard reload (Ctrl+Shift+R)
 - Ensure images use absolute paths (starting with `/`)
 
+### Mini-Games Not Working
+- Check that `minigames.js` is loaded in `game.html`
+- Verify all three players are connected
+- Check browser console for JavaScript errors
+- Ensure Socket.io is properly broadcasting mini-game state
+- Try refreshing and rejoining the room
+
 ### Room Doesn't Exist Error
 - The room may have expired (5-minute timeout after all players leave)
 - Create a new room and share the new URL
@@ -387,6 +406,6 @@ This project is provided as-is for educational and entertainment purposes.
 
 ---
 
-**Current Version**: Beta 1.1 (Multi-Page Update)
+**Current Version**: Beta 1.2 (Combat Mini-Games Update)
 **Last Updated**: 2025  
-**Status**: In Development - Local play available with shareable URLs, web deployment coming soon
+**Status**: In Development - Local play available with shareable URLs, mini-games fully functional, web deployment coming soon
