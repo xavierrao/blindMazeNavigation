@@ -1,13 +1,33 @@
-/* Global styles with enhanced parchment texture */
+/* ============================================
+   TABLE OF CONTENTS
+   1. Global Styles & Reset
+   2. Typography
+   3. Layout & Containers
+   4. Buttons
+   5. Forms & Inputs
+   6. Game Board & SVG
+   7. Player Info & Cards
+   8. Movement & Controls
+   9. Items & Shop
+   10. Modals & Overlays
+   11. Wheel Mechanics
+   12. Mini-Games
+   13. FAQ Page
+   14. Footer
+   15. Responsive Design
+   ============================================ */
+
+/* ============================================
+   1. GLOBAL STYLES & RESET
+   ============================================ */
 body {
     font-family: 'Georgia', serif;
     background: linear-gradient(to bottom, #2b2b2b, #4a3728);
-    /* Gradient for fantasy theme */
     background-color: #2b2b2b;
-    /* Fallback */
     color: #f0e6d2;
     margin: 0;
     padding: 20px;
+    padding-bottom: 60px;
     font-size: 20px;
     display: flex;
     justify-content: center;
@@ -17,7 +37,7 @@ body {
     overflow-y: auto;
 }
 
-/* Parchment texture overlay using radial gradient */
+/* Parchment texture overlay */
 body::before {
     content: '';
     position: fixed;
@@ -27,7 +47,6 @@ body::before {
     height: 100%;
     background: radial-gradient(circle, rgba(74, 55, 40, 0.15) 1px, transparent 1px);
     background-size: 10px 10px;
-    /* Grainy parchment effect */
     opacity: 0.15;
     z-index: -1;
 }
@@ -40,7 +59,35 @@ body::before {
     display: none;
 }
 
-/* Style for active page */
+/* ============================================
+   2. TYPOGRAPHY
+   ============================================ */
+h1 {
+    font-size: 40px;
+    color: #d4a017;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 32px;
+    color: #d4a017;
+}
+
+h3 {
+    font-size: 30px;
+    color: #f0e6d2;
+    margin-bottom: 15px;
+}
+
+h4 {
+    font-size: 24px;
+    color: #f0e6d2;
+    margin: 10px 0;
+}
+
+/* ============================================
+   3. LAYOUT & CONTAINERS
+   ============================================ */
 .active-page {
     background-color: rgba(60, 47, 47, 0.9);
     padding: 30px;
@@ -57,7 +104,6 @@ body::before {
     margin: 0 auto;
 }
 
-/* Apply active-page to specific containers when visible */
 #name-entry.active-page,
 #room-container.active-page,
 #loading-indicator.active-page,
@@ -65,7 +111,6 @@ body::before {
     display: flex;
 }
 
-/* Room container for vertical layout */
 #room-container {
     flex-direction: column;
     align-items: center;
@@ -73,50 +118,36 @@ body::before {
     max-width: 600px;
 }
 
-/* Room selection and ID display */
 #room-selection,
 #room-id-display {
     width: 100%;
     max-width: 600px;
 }
 
-/* Room ID display below room selection */
 #room-id-display {
     margin-top: 20px;
 }
 
-/* Larger headings */
-h1 {
-    font-size: 40px;
-    color: #d4a017;
-    margin-bottom: 20px;
-}
-
-h3 {
-    font-size: 30px;
-    color: #f0e6d2;
-    margin-bottom: 15px;
-}
-
-h4 {
-    font-size: 24px;
-    color: #f0e6d2;
+#back-to-room-selection-container {
     margin: 10px 0;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-/* Larger input fields */
-input[type="text"] {
-    padding: 10px;
-    font-size: 18px;
-    width: 250px;
-    margin: 10px 0;
-    border: 2px solid #d4a017;
-    border-radius: 5px;
-    background-color: #4a3728;
-    color: #f0e6d2;
+.separator {
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(to right, transparent, #d4a017, transparent);
+    margin: 15px 0;
+    box-shadow: 0 1px 3px rgba(212, 160, 23, 0.5);
 }
 
-/* Larger buttons with hover effect */
+/* ============================================
+   4. BUTTONS
+   ============================================ */
 .fantasy-button {
     background-color: #d4a017;
     color: #2b2b2b;
@@ -140,7 +171,6 @@ input[type="text"] {
     background-color: #e6b800;
 }
 
-/* Larger copy button */
 .copy-button {
     background-color: #4a3728;
     color: #f0e6d2;
@@ -151,27 +181,6 @@ input[type="text"] {
 
 .copy-button:hover:not(:disabled) {
     background-color: #5c4636;
-}
-
-/* Larger log content */
-#log-content {
-    max-height: 300px;
-    overflow-y: auto;
-    background-color: #4a3728;
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 18px;
-    margin-top: 10px;
-}
-
-/* Back to room selection container */
-#back-to-room-selection-container {
-    margin: 10px 0;
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
 }
 
 #back-to-room-selection {
@@ -191,7 +200,28 @@ input[type="text"] {
     transform: scale(1.05);
 }
 
-/* Larger SVG board */
+/* ============================================
+   5. FORMS & INPUTS
+   ============================================ */
+input[type="text"] {
+    padding: 10px;
+    font-size: 18px;
+    width: 250px;
+    margin: 10px 0;
+    border: 2px solid #d4a017;
+    border-radius: 5px;
+    background-color: #4a3728;
+    color: #f0e6d2;
+}
+
+.memory-toggle-container {
+    margin: 15px 0;
+    font-size: 18px;
+}
+
+/* ============================================
+   6. GAME BOARD & SVG
+   ============================================ */
 #board {
     margin: 20px auto;
     width: 400px;
@@ -239,24 +269,203 @@ input[type="text"] {
     fill: #ffd700;
 }
 
-/* Larger SVG text */
 #board text {
     font-size: 18px;
     fill: #f0e6d2;
 }
 
-/* Larger SVG rectangles */
 #board rect {
     width: 60px;
     height: 60px;
 }
 
-/* Larger SVG lines */
 #board line {
     stroke-width: 3;
 }
 
-/* Larger modal for selling items */
+/* ============================================
+   7. PLAYER INFO & CARDS
+   ============================================ */
+#player-info-bar {
+    display: none;
+    justify-content: space-around;
+    gap: 15px;
+    padding: 15px;
+}
+
+.player-card {
+    flex: 1;
+    padding: 15px;
+    background-color: #4a3728;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.player-card.current-player {
+    border: 2px solid #d4a017;
+    box-shadow: 0 0 10px rgba(212, 160, 23, 0.5);
+}
+
+/* ============================================
+   8. MOVEMENT & CONTROLS
+   ============================================ */
+#move-options-header,
+#shop-header,
+#inventory-header,
+#log-header {
+    display: block;
+    font-size: 32px;
+    font-weight: bold;
+    color: #f0e6d2;
+    letter-spacing: 2px;
+    border-top: 3px solid #d4a017;
+    border-bottom: 3px solid #d4a017;
+    padding: 20px;
+    margin: 20px 0px;
+    text-align: center;
+    background: linear-gradient(to right, rgba(212, 160, 23, 0.1), transparent, rgba(212, 160, 23, 0.1));
+}
+
+#move-options {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+#move-options .move-button {
+    padding: 15px;
+    font-size: 16px;
+    min-height: 60px;
+    overflow: hidden;
+}
+
+#move-options .move-button.disabled {
+    background-color: #6b5b3e;
+    color: #888;
+    cursor: not-allowed;
+}
+
+#move-options .center-empty {
+    background-color: transparent;
+    border: none;
+    cursor: default;
+}
+
+#end-turn {
+    margin: 10px 0;
+    width: 100%;
+    max-width: 600px;
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* ============================================
+   9. ITEMS & SHOP
+   ============================================ */
+.item-sprite {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+.item-container {
+    position: relative;
+    display: inline-block;
+}
+
+.shop-item-button,
+.inventory-item-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 15px;
+    width: 140px;
+    height: 140px;
+    margin: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.shop-item-button:hover:not(:disabled),
+.inventory-item-button:hover {
+    background-color: #e6b800;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+#shop-items,
+#inventory {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.item-name {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #f0e6d2;
+}
+
+.item-info {
+    font-size: 14px;
+    color: #f0e6d2;
+}
+
+.item-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(60, 47, 47, 0.98);
+    color: #f0e6d2;
+    padding: 12px 15px;
+    border-radius: 6px;
+    border: 2px solid #d4a017;
+    white-space: normal;
+    width: 280px;
+    font-size: 14px;
+    text-align: left;
+    z-index: 1000;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.item-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 8px solid transparent;
+    border-top-color: #d4a017;
+}
+
+.item-container:hover .item-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ============================================
+   10. MODALS & OVERLAYS
+   ============================================ */
 #sell-modal {
     position: fixed;
     top: 50%;
@@ -270,22 +479,19 @@ input[type="text"] {
     font-size: 18px;
 }
 
-/* Larger memory toggle container */
-.memory-toggle-container {
-    margin: 15px 0;
+#log-content {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #4a3728;
+    padding: 15px;
+    border-radius: 5px;
     font-size: 18px;
+    margin-top: 10px;
 }
 
-/* End Turn container */
-#end-turn {
-    margin: 10px 0;
-    width: 100%;
-    max-width: 600px;
-    display: none;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
+/* ============================================
+   11. WHEEL MECHANICS
+   ============================================ */
 #wheel-modal {
     display: none;
 }
@@ -295,10 +501,282 @@ input[type="text"] {
     margin-bottom: 20px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
+/* ============================================
+   12. MINI-GAMES
+   ============================================ */
+#minigame-container h2 {
+    color: #d4a017;
+    margin-top: 0;
+    font-size: 32px;
+    text-align: center;
+}
+
+#minigame-container p {
+    color: #f0e6d2;
+    font-size: 18px;
+    margin: 5px 0;
+    text-align: center;
+}
+
+#minigame-container .fantasy-button {
+    margin: 5px;
+}
+
+/* Tic-Tac-Toe */
+.tictactoe-cell {
+    width: 80px;
+    height: 80px;
+    background: #4a3728;
+    border: 2px solid #d4a017;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #d4a017;
+    transition: all 0.2s;
+}
+
+.tictactoe-cell:hover:not([style*="cursor: not-allowed"]) {
+    background: #5a4738;
+    transform: scale(1.05);
+}
+
+.tictactoe-cell:active:not([style*="cursor: not-allowed"]) {
+    transform: scale(0.95);
+}
+
+/* Reversi */
+.reversi-cell {
+    width: 60px;
+    height: 60px;
+    background: #2d5016;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    transition: all 0.2s;
+}
+
+.reversi-cell:hover {
+    transform: scale(1.1);
+}
+
+/* Coin Clash */
+#coinclash-betting button {
+    min-width: 80px;
+    padding: 12px 20px;
+    font-size: 16px;
+}
+
+#coinclash-results {
+    margin-top: 20px;
+    min-height: 50px;
+}
+
+/* ============================================
+   13. FAQ PAGE
+   ============================================ */
+.faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: rgba(60, 47, 47, 0.9);
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.faq-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.faq-header h1 {
+    color: #d4a017;
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.faq-header p {
+    color: #f0e6d2;
+    font-size: 20px;
+}
+
+.faq-section {
+    margin-bottom: 40px;
+}
+
+.faq-section h2 {
+    color: #d4a017;
+    font-size: 32px;
+    border-bottom: 2px solid #d4a017;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.faq-item {
+    margin-bottom: 25px;
+    padding: 20px;
+    background-color: rgba(74, 55, 40, 0.5);
+    border-radius: 8px;
+    border-left: 4px solid #d4a017;
+}
+
+.faq-item h3 {
+    color: #d4a017;
+    font-size: 22px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.faq-item h3:hover {
+    color: #e6b800;
+}
+
+.faq-item h3::after {
+    content: '▼';
+    font-size: 16px;
+    transition: transform 0.3s;
+}
+
+.faq-item h3.collapsed::after {
+    transform: rotate(-90deg);
+}
+
+.faq-answer {
+    color: #f0e6d2;
+    font-size: 18px;
+    line-height: 1.6;
+    margin-top: 15px;
+}
+
+.faq-answer.hidden {
+    display: none;
+}
+
+.faq-answer p {
+    margin-bottom: 15px;
+}
+
+.faq-answer ul {
+    margin-left: 25px;
+    margin-bottom: 15px;
+}
+
+.faq-answer li {
+    margin-bottom: 8px;
+}
+
+.faq-answer code {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: #d4a017;
+}
+
+.faq-answer strong {
+    color: #d4a017;
+}
+
+.faq-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.faq-table th,
+.faq-table td {
+    border: 1px solid #d4a017;
+    padding: 10px;
+    text-align: left;
+}
+
+.faq-table th {
+    background-color: rgba(212, 160, 23, 0.2);
+    color: #d4a017;
+    font-weight: bold;
+}
+
+.grid-example {
+    font-family: monospace;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+    text-align: center;
+    line-height: 1.8;
+}
+
+/* ============================================
+   14. FOOTER
+   ============================================ */
+.game-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(43, 43, 43, 0.95);
+    border-top: 2px solid #d4a017;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #f0e6d2;
+    z-index: 999;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.game-footer a {
+    color: #d4a017;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.game-footer a:hover {
+    color: #e6b800;
+    text-decoration: underline;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-divider {
+    color: #d4a017;
+    font-weight: bold;
+}
+
+.github-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+/* ============================================
+   15. RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
     body {
         padding: 10px;
+        padding-bottom: 80px;
         font-size: 18px;
     }
 
@@ -355,257 +833,39 @@ input[type="text"] {
     #end-turn {
         margin: 5px 0;
     }
-}
 
-#move-options-header,
-#shop-header,
-#inventory-header,
-#log-header {
-    display: block;
-    font-size: 32px;
-    font-weight: bold;
-    color: #f0e6d2;
-    letter-spacing: 2px;
-    border-top: 3px solid #d4a017;
-    border-bottom: 3px solid #d4a017;
-    padding: 20px;
-    margin: 20px 0px;
-    text-align: center;
-    background: linear-gradient(to right, rgba(212, 160, 23, 0.1), transparent, rgba(212, 160, 23, 0.1));
-}
+    /* FAQ Responsive */
+    .faq-container {
+        padding: 20px 10px;
+    }
 
-#player-info-bar {
-    display: none;
-    justify-content: space-around;
-    gap: 15px;
-    padding: 15px;
-}
+    .faq-header h1 {
+        font-size: 36px;
+    }
 
-.player-card {
-    flex: 1;
-    padding: 15px;
-    background-color: #4a3728;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    text-align: center;
-}
+    .faq-section h2 {
+        font-size: 26px;
+    }
 
-.player-card.current-player {
-    border: 2px solid #d4a017;
-    box-shadow: 0 0 10px rgba(212, 160, 23, 0.5);
-}
+    .faq-item h3 {
+        font-size: 18px;
+    }
 
-.separator {
-    height: 2px;
-    width: 100%;
-    background: linear-gradient(to right, transparent, #d4a017, transparent);
-    margin: 15px 0;
-    box-shadow: 0 1px 3px rgba(212, 160, 23, 0.5);
-}
+    .faq-answer {
+        font-size: 16px;
+    }
 
-#move-options {
-    display: none;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%;
-    max-width: 500px;
-    margin: 20px auto;
-}
-
-#move-options .move-button {
-    padding: 15px;
-    font-size: 16px;
-    min-height: 60px;
-    overflow: hidden;
-}
-
-#move-options .move-button.disabled {
-    background-color: #6b5b3e;
-    color: #888;
-    cursor: not-allowed;
-}
-
-#move-options .center-empty {
-    background-color: transparent;
-    border: none;
-    cursor: default;
-}
-
-.item-sprite {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 8px;
-    image-rendering: pixelated;
-    /* Keeps pixel art crisp */
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-}
-
-.item-container {
-    position: relative;
-    display: inline-block;
-}
-
-.shop-item-button,
-.inventory-item-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 15px;
-    width: 140px;
-    height: 140px;
-    margin: 10px;
-    position: relative;
-    cursor: pointer;
-}
-
-.shop-item-button:hover:not(:disabled),
-.inventory-item-button:hover {
-    background-color: #e6b800;
-    transform: scale(1.05);
-    transition: all 0.2s ease;
-}
-
-#shop-items,
-#inventory {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: center;
-    width: 100%;
-    gap: 10px;
-}
-
-.item-name {
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 5px;
-    color: #f0e6d2;
-}
-
-.item-info {
-    font-size: 14px;
-    color: #f0e6d2;
-}
-
-/* Custom tooltip */
-.item-tooltip {
-    visibility: hidden;
-    opacity: 0;
-    position: absolute;
-    bottom: 110%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(60, 47, 47, 0.98);
-    color: #f0e6d2;
-    padding: 12px 15px;
-    border-radius: 6px;
-    border: 2px solid #d4a017;
-    white-space: normal;
-    width: 280px;
-    font-size: 14px;
-    text-align: left;
-    z-index: 1000;
-    pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-    transition: opacity 0.3s, visibility 0.3s;
-}
-
-.item-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 8px solid transparent;
-    border-top-color: #d4a017;
-}
-
-.item-container:hover .item-tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Footer Styles */
-.game-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(43, 43, 43, 0.95);
-    border-top: 2px solid #d4a017;
-    padding: 15px 20px;
-    text-align: center;
-    font-size: 14px;
-    color: #f0e6d2;
-    z-index: 999;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.game-footer a {
-    color: #d4a017;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-
-.game-footer a:hover {
-    color: #e6b800;
-    text-decoration: underline;
-}
-
-.footer-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.footer-section {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.footer-divider {
-    color: #d4a017;
-    font-weight: bold;
-}
-
-.github-icon {
-    width: 18px;
-    height: 18px;
-    vertical-align: middle;
-    margin-right: 4px;
-}
-
-/* Adjust body padding to account for fixed footer */
-body {
-    padding-bottom: 60px;
-}
-
-/* Responsive footer */
-@media (max-width: 768px) {
+    /* Footer Responsive */
     .game-footer {
         padding: 12px 15px;
         font-size: 12px;
     }
-    
+
     .footer-content {
         gap: 10px;
     }
-    
+
     .footer-divider {
         display: none;
-    }
-    
-    body {
-        padding-bottom: 80px;
     }
 }
