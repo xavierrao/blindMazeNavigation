@@ -309,7 +309,9 @@
             <div class="faq-item">
                 <h3 class="collapsed">What happens when I land on a Combat space?</h3>
                 <div class="faq-answer hidden">
-                    <p>When you land on a Combat space, you spin the Combat Wheel. The wheel result determines the reward, and then all three players compete in a randomly selected mini-game. The winner receives the Combat Wheel reward!</p>
+                    <p>When you land on a Combat space, you spin the Combat Wheel. The wheel result determines the
+                        reward, and then all three players compete in a randomly selected mini-game. The winner receives
+                        the Combat Wheel reward!</p>
                 </div>
             </div>
 
@@ -323,7 +325,8 @@
                     <ul>
                         <li>Played on a 4x4 board with three symbols: X, O, and △</li>
                         <li>Each player has 3 pieces that can be placed</li>
-                        <li>When a player has all 3 pieces on the board, placing a new piece removes their oldest piece</li>
+                        <li>When a player has all 3 pieces on the board, placing a new piece removes their oldest piece
+                        </li>
                         <li>First player to get 3 in a row (horizontal, vertical, or diagonal) wins</li>
                         <li>Only the current player can win on their own turn (prevents kingmaking)</li>
                     </ul>
@@ -333,7 +336,8 @@
                         <li>3-player version of Othello played on a 6x6 board</li>
                         <li>Three colors: ⚫ Black, ⚪ White, and 🔴 Red</li>
                         <li>Each player starts with 2 tiles in the center area</li>
-                        <li>Modified flipping rule: When you place a tile, flip any straight line of contiguous tiles of a single color if your tile brackets them</li>
+                        <li>Modified flipping rule: When you place a tile, flip any straight line of contiguous tiles of
+                            a single color if your tile brackets them</li>
                         <li>Game ends when no valid moves remain for all players</li>
                         <li>Player with the most tiles of their color wins</li>
                     </ul>
@@ -344,7 +348,8 @@
                         <li>Each player starts with 5 "coins" (separate from main game gold)</li>
                         <li>Each round, all players secretly choose to bet 0-3 coins</li>
                         <li>Reveal: The highest unique bet wins the round, but that player loses those coins</li>
-                        <li>If the highest bets are tied, all tied players lose their coins but nobody wins the round</li>
+                        <li>If the highest bets are tied, all tied players lose their coins but nobody wins the round
+                        </li>
                         <li>Players who bet lower than the highest keep their coins</li>
                         <li>Game ends when all players run out of coins</li>
                         <li>Whoever won the most rounds wins the mini-game</li>
@@ -369,7 +374,8 @@
                 <h3 class="collapsed">Can I decline to play a Combat mini-game?</h3>
                 <div class="faq-answer hidden">
                     <p>No, Combat mini-games are mandatory when triggered by the Combat Wheel. All three players must
-                        participate. However, they're designed to be quick so they don't significantly slow down the main game.</p>
+                        participate. However, they're designed to be quick so they don't significantly slow down the
+                        main game.</p>
                 </div>
             </div>
         </div>
@@ -601,16 +607,26 @@
             <span class="footer-divider">•</span>
 
             <div class="footer-section">
-                <a href="/lobby">Back to Lobby</a>
-            </div>
-
-            <span class="footer-divider">•</span>
-
-            <div class="footer-section">
                 <span>Version Beta 1.2</span>
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqItems = document.querySelectorAll('.faq-item h3');
+
+            faqItems.forEach(function (question) {
+                question.addEventListener('click', function () {
+                    this.classList.toggle('collapsed');
+
+                    const answer = this.nextElementSibling;
+                    answer.classList.toggle('hidden');
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>
